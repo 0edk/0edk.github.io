@@ -1,0 +1,17 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.5;
+    max-width: 40em;
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: black;
+        color: lightgrey;
+    }
+    a:not(:visited) {
+        color: cyan;
+    }
+    a:visited {
+        color: fuchsia;
+    }
+}
