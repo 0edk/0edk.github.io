@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>How to grasp a DFA if you don't grasp DFAs</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>How to grasp a DFA if you don't grasp DFAs</h1>
+        <p>Do you see what language this <a href="https://en.wikipedia.org/wiki/Deterministic_finite_automaton">DFA</a> accepts?</p>
+        <img src="dfa.svg">
+        <p>The automaton, drawn better, is exercise 2.6c in <i>Introduction to Automata Theory, Languages, and Computation</i> (Hopcroft and Ullman, 1979).
+        Presumably, a smart human could solve it.
+        Part (a) was trivial.
+        Part (b) is not trivial, but you can reduce the DFA to an NFA by conventional methods.
+        I asked a TA about this part (c).
+        He showed me the conventional method.
+        It didn't work.</p>
+        <p>Thirty hours later, I tried the conventional method again to get the regexp <code>((00)*0?1(0*11(11)*)(00)*0?10)(00)*(0?1((0*11(11)*)*(00)*(0?10)?)?)?</code>.
+        "Describe in English," the textbook had demanded.
+        That's not English in the slightest.</p>
+        <p>I stepped thru the automaton by hand to see which small integers it accepted.
+        "Integers" because binary strings represent integers.
+        If leading 0s affect how one uses the bit-strings, they can't be integers.
+        But here, the first 1 will always land you at state C.
+        Integers they are.</p>
+        <p>It turns out the DFA accepts the binary representations of 1, 4, 6, 7, 10, 11, and 13, with a complication at 0.
+        That is an Integer Sequence.
+        When life gives you an Integer Sequence, <s>make Integer Sequenceade</s> <a href="https://oeis.org/search?q=1%2C4%2C6%2C7%2C10%2C11%2C13">look it up in the Online Encyclopedia</a>.</p>
+        <p>The top result was "positions of 1s in the Thue-Morse sequence."
+        That looked absurd, so I checked more terms: 16, 18, 19, 21, 24, 25.
+        It became the only result.
+        Why?</p>
+        <p>Given the first 2<sup><var>k</var></sup> terms of the Thue-Morse sequence, complement them in the same order to get the next 2<sup><var>k</var></sup> terms.
+        That means term <var>n</var> is the complement of term <var>n</var> - 2<sup><var>k</var></sup>, for the maximum 2<sup><var>k</var></sup> &lt; <var>n</var>.
+        Subtracting the greatest power of two you can is removing the first 1 bit.
+        So TM(1‖<var>n</var>) = ¬TM(<var>n</var>), with the base case TM(0) = 1.</p>
+        <p>Consume two 1s when recursing down TM and you get back where you started.
+        So TM(<var>n</var>) is "<var>n</var> has an even number of 1s."</p>
+        <p>Except ... <a href="https://oeis.org/A026147">the OEIS defines the positions of 1s</a> with indices starting at 1.
+        The definitions I worked out above start indices at 0.
+        The DFA of exercise 2.6c checks "does <var>n</var> - 1 have an even number of 1s?"
+        How is such a small automaton doing arithmetic?</p>
+        <p>Subtracting 1 is simple enough arithmetic.
+        To decrement a binary number, find the last 1, then complement it and all trailing 0s.
+        E.g. ten is 1010, its last 1 is in the two's place, so we complement that to get 1001, representing nine.
+        That change removes one 1, then adds as many as there were trailing 0s.
+        So the number of 1s in binary <var>n</var> - 1 is the number of 1s in <var>n</var>, plus the number of trailing 0s, minus one.
+        <var>n</var> - 1 has an even number of 1s iff <var>n</var> has an odd number of 1s plus trailing 0s.</p>
+        <p>It's easy enough to track parities with a DFA.
+        Make two states, for even and odd, and transition between them whenever you increment the counter.
+        But if you only count the total of 1s and trailing 0s, whenever you hit a run of 1s, you must subtract a now-lost number of "trailing" 0s, now found to not really be trailing.
+        So we track whether the total 1s are even or odd, and whether the trailing 0s are even or odd.
+        That makes four states.</p>
+        <ul>
+            <li><var>a</var> + <var>b</var> is odd iff <var>a</var> is odd xor <var>b</var> is odd, so the accepting states are (1s even, trailing 0s odd) and (1s odd, trailing 0s even).</li>
+            <li>When you find a 0, you increment the count of trailing 0s, flipping its parity.</li>
+            <li>When you find a 1, you increment the count of total 1s, flipping its parity.
+            You also reset the number of trailing 0s, making it even.</li>
+            <li>From the "complication at 0" earlier, the DFA accepts any string of an even number of 0s, as if it starts with (1s even, trailing 0s odd).</li>
+        </ul>
+        <img src="parities.svg">
+        <p>Up to labelling, this is identical to what we started with.
+        To answer Hopcroft and Ullman: finite automaton (c) accepts those binary strings with a positive number of 1s opposite in parity to the number of trailing 0s, or holding only an even number of 0s.</p>
+    </body>
+</html>
