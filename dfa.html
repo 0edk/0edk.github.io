@@ -20,10 +20,11 @@
         <p>Thirty hours later, I tried the conventional method again to get the regexp <code>((00)*0?1(0*11(11)*)(00)*0?10)(00)*(0?1((0*11(11)*)*(00)*(0?10)?)?)?</code>.
         "Describe in English," the textbook had demanded.
         That's not English in the slightest.</p>
+        <h2>Brute force</h2>
         <p>I stepped thru the automaton by hand to see which small integers it accepted.
         "Integers" because binary strings represent integers.
         If leading 0s affect how one uses the bit-strings, they can't be integers.
-        But here, the first 1 will always land you at state C.
+        But here, the first 1 after however many leading 0s will always land you at state C.
         Integers they are.</p>
         <p>It turns out the DFA accepts the binary representations of 1, 4, 6, 7, 10, 11, and 13, with a complication at 0.
         That is an Integer Sequence.
@@ -32,15 +33,19 @@
         That looked absurd, so I checked more terms: 16, 18, 19, 21, 24, 25.
         It became the only result.
         Why?</p>
+        <h2>Thue-Morse as a bitwise function</h2>
         <p>Given the first 2<sup><var>k</var></sup> terms of the Thue-Morse sequence, complement them in the same order to get the next 2<sup><var>k</var></sup> terms.
-        That means term <var>n</var> is the complement of term <var>n</var> - 2<sup><var>k</var></sup>, for the maximum 2<sup><var>k</var></sup> &lt; <var>n</var>.
-        Subtracting the greatest power of two you can is removing the first 1 bit.
-        So TM(1‖<var>n</var>) = ¬TM(<var>n</var>), with the base case TM(0) = 1.</p>
-        <p>Consume two 1s when recursing down TM and you get back where you started.
+        That means term <var>n</var>, with 2<sup><var>k</var></sup> ≤ <var>n</var> &lt; 2<sup><var>k</var> + 1</sup>, is the complement of its counterpart <var>n</var> - 2<sup><var>k</var></sup> in the previous block.
+        Subtracting 2<sup><var>k</var></sup>, the greatest power of two you can, is removing the most significant (first) 1 bit.
+        Let's treat the Thue-Morse sequence as a recurrence on bit-strings: TM(1‖<var>n</var>) = ¬TM(<var>n</var>) and TM(0‖<var>n</var>) = TM(<var>n</var>), with the base case TM(0) = 1.</p>
+        <p>When you recurse down that definition of TM, hit two 1s and the result returns to what it was before.
         So TM(<var>n</var>) is "<var>n</var> has an even number of 1s."</p>
-        <p>Except ... <a href="https://oeis.org/A026147">the OEIS defines the positions of 1s</a> with indices starting at 1.
+        <h2>Off by one</h2>
+        <p><a href="https://oeis.org/A026147">The OEIS defines the positions of 1s</a> with indices starting at 1.
         The definitions I worked out above start indices at 0.
-        The DFA of exercise 2.6c checks "does <var>n</var> - 1 have an even number of 1s?"
+        Even assuming Thue-Morse describes the DFA of exercise 2.6c, it doesn't check that "<var>n</var> has an even number of 1s."
+        It checks that "<var>n</var> - 1 has an even number of 1s."
+        Which suggests the automaton does arithmetic.
         How is such a small automaton doing arithmetic?</p>
         <p>Subtracting 1 is simple enough arithmetic.
         To decrement a binary number, find the last 1, then complement it and all trailing 0s.
@@ -48,7 +53,11 @@
         That change removes one 1, then adds as many as there were trailing 0s.
         So the number of 1s in binary <var>n</var> - 1 is the number of 1s in <var>n</var>, plus the number of trailing 0s, minus one.
         <var>n</var> - 1 has an even number of 1s iff <var>n</var> has an odd number of 1s plus trailing 0s.</p>
-        <p>It's easy enough to track parities with a DFA.
+        <p>There's an exception when you decrement zero.
+        There's no last 1 in ...0000, however long, so you decrement it to get ...1111, i.e. negative one.
+        That has infinitely many 1s, neither even nor odd.</p>
+        <h2>Rederiving</h2>
+        <p>In the well-behaved case, it's easy enough to track parities with a DFA.
         Make two states, for even and odd, and transition between them whenever you increment the counter.
         But if you only count the total of 1s and trailing 0s, whenever you hit a run of 1s, you must subtract a now-lost number of "trailing" 0s, now found to not really be trailing.
         So we track whether the total 1s are even or odd, and whether the trailing 0s are even or odd.
@@ -58,10 +67,12 @@
             <li>When you find a 0, you increment the count of trailing 0s, flipping its parity.</li>
             <li>When you find a 1, you increment the count of total 1s, flipping its parity.
             You also reset the number of trailing 0s, making it even.</li>
-            <li>From the "complication at 0" earlier, the DFA accepts any string of an even number of 0s, as if it starts with (1s even, trailing 0s odd).</li>
+            <li>"Trailing 0s" are ill-defined for the input number zero.
+            Empirically, the original DFA accepts any string of an even number of 0s, as if it starts with (1s even, trailing 0s odd).</li>
         </ul>
         <img src="parities.svg">
         <p>Up to labelling, this is identical to what we started with.
-        To answer Hopcroft and Ullman: finite automaton (c) accepts those binary strings with a positive number of 1s opposite in parity to the number of trailing 0s, or holding only an even number of 0s.</p>
+        To answer Hopcroft and Ullman: finite automaton (c) accepts those binary strings with a positive number of 1s opposite in parity to the number of trailing 0s, or holding no 1s but an even number of 0s.</p>
+        <footer><i>Updated 2026-04-19</i> - <a href="index.html">homepage</a></footer>
     </body>
 </html>
