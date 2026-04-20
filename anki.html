@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>A guide to Anki extremism</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>A guide to Anki extremism</h1>
+        <blockquote><a href="https://apps.ankiweb.net/">Anki</a> is a flashcard program that helps you spend more time on challenging material, and less on what you already know.</blockquote>
+        <p>I use it heavily to help me learn and remember.
+        Here's how.</p>
+        <h2>Practices</h2>
+        <p>I put notes in Anki for anything that I want to remember, that I might not remember naturally, and that I know how to express as Anki cards.
+        I write those notes into Anki on my laptop.
+        When I learn away from my laptop, I write a draft of the requisite Anki note on paper, to be input when I get back.</p>
+        <p>My smartphone has AnkiDroid (a port of Anki), synced with my laptop by AnkiWeb.
+        When I'm bored and can use my phone, I usually open AnkiDroid and start reviewing.
+        It takes a bit to finish my hundred-or-more reviews each day.
+        Only after that do I do more normal bored-with-a-phone things.</p>
+        <h2>Content</h2>
+        <p>Anki expects you study every day.
+        To keep that up, especially in the beginning, you need to make studying easy and fun.
+        Ease depends mainly on two factors that you can control:</p>
+        <ul>
+            <li>appeal of content</li>
+            <li>length of answers</li>
+        </ul>
+        <p>The ease of studying goes something like</p>
+        <img src="ease.png">
+        <p>Stay away from the Valley of Study Fatigue.
+        I mix academics, some of it boring, with more fun things like <a href="https://en.wikipedia.org/wiki/Go_(game)">weiqi</a> and <a href="https://xkcd.com/">xkcd comics</a>.</p>
+        <p>I make the answer to most cards five words or less.
+        It helps to abbreviate and be grammatically lazy: what matters is that cards make sense to yourself, who will study them.
+        So I write e.g. "logical ops on clock signal" instead of "clock signal is used only after logical operations."
+        (Don't put logical operations on your clock signal.
+        It causes <a href="https://en.wikipedia.org/wiki/Clock_skew">clock skew</a>, which is bad.)
+        By symmetry in how I make cards, this practice also leads to short questions.</p>
+        <p>If items in a topic all have the same structure:</p>
+        <ul>
+            <li>a symbol and how to write it in <a href="https://en.wikipedia.org/wiki/LaTeX">LaTeX</a> or <a href="https://en.wikipedia.org/wiki/Typst">Typst</a></li>
+            <li>a letter and its word in a <a href="https://en.wikipedia.org/wiki/Spelling_alphabet">spelling alphabet</a></li>
+            <li>the crux of an xkcd comic and its title</li>
+        </ul>
+        <p>then I make a custom note type for it, and mindlessly fill in fields.
+        Otherwise, I think at some length to arrange material into <a href="https://ankiweb.net/shared/info/665790891">Yukogurafu's</a> highly flexible Directed Graph note type.</p>
+        <p>To keep cards homogeneous, I make any custom note type generate cards much like those that I'd get from a Directed Graph.
+        That is, the front of a card is a bolded short subject name:</p>
+        <ul>
+            <li>CS</li>
+            <li>E&amp;M</li>
+            <li>maths</li>
+            <li>C</li>
+            <li>asm</li>
+            <li><code>py</code></li>
+            <li>ECE</li>
+            <li>thermo</li>
+            <li>(etc)</li>
+        </ul>
+        <p>then a term or phrase, then a bolded interrogative word:</p>
+        <ul>
+            <li>how</li>
+            <li>why</li>
+            <li>holds</li>
+            <li>called</li>
+            <li>case</li>
+            <li>where</li>
+            <li>bind</li>
+            <li>why not</li>
+            <li>fix</li>
+            <li>(etc).</li>
+        </ul>
+        <p>And the back of a card is a term or phrase as an answer.</p>
+        <h2>Process</h2>
+        <p>Each little topic turns into one graph note.
+        Each node in the graph is a concept, term, or proposition.
+        Each edge is a type of question that leads from one to another.
+        Some common types of questions, with examples:</p>
+        <table>
+            <tr><th>Pattern</th><th>Start node</th><th>Edge</th><th>End node</th></tr>
+            <tr><td>expand short term to definition</td><td>data race</td><td>long</td><td>concurrent access on one variable</td></tr>
+            <tr><td>contract description to term</td><td>concurrent access on one variable</td><td>short</td><td>data race</td></tr>
+            <tr><td>match concept to application</td><td>Dijkstra's algorithm</td><td>why</td><td>shortest paths from one node to all others</td></tr>
+            <tr><td>match task to method</td><td>return to start of file</td><td>how</td><td><a href="https://man.he.net/?topic=rewind&section=3"><code>rewind(f)</code></a></td></tr>
+            <tr><td>identify context or origin</td><td>order partition in-place</td><td>where</td><td>quicksort</td></tr>
+            <tr><td>identify mistake or disadvantage</td><td><a href="https://man.he.net/?topic=wc&section=1"><code>wc -c FNAME</code></a></td><td>why not</td><td>avoidably reads file</td></tr>
+            <tr><td>improve flawed attempt</td><td><code>wc -c FNAME</code></td><td>fix</td><td><code>stat '%s' FNAME</code></td></tr>
+            <tr><td>explain novel part of phrase</td><td><a href="https://en.wikipedia.org/wiki/Shockley_diode_equation"><var>i</var> = <var>i<sub>S</sub></var> (exp(<var>v</var> / (<var>n</var> <var>v<sub>T</sub></var>)) - 1)</a></td><td><var>i<sub>S</sub></var>?</td><td>reverse saturation current</td></tr>
+            <tr><td>specify prereqs of theorem</td><td><a href="https://mathworld.wolfram.com/FermatsLittleTheorem.html"><var>a</var><sup><var>p</var></sup> ≡ <var>a</var> (mod <var>p</var>)</a></td><td>when</td><td><var>p</var> prime</td></tr>
+            <tr><td>express new variable from familiar ones</td><td><a href="https://en.wikipedia.org/wiki/Intensity_(physics)">intensity</a></td><td>from <var>E</var></td><td><var>c</var> <var>ε</var> <var>E<sub>rms</sub></var><sup>2</sup></td></tr>
+        </table>
+        <p>I ask as many questions about each topic as I reasonably can, and make an edge in the note (hence a card) for each.
+        Sometimes these questions go outside the range of common types.
+        The thought it takes to make good notes provides a lot of the learning, even before any reviews.</p>
+        <p>Even routine questions with custom note types are designed like directed graphs.
+        I just do that design only once for each such note type.</p>
+        <p>The main exception to this process is, again, foreign language.
+        I use <a href="https://ankiweb.net/shared/info/215175086">Permuted Sentences</a> to learn Biblical Hebrew.</p>
+        <p>In principle, you could use Sentence Translation notes for any pair of languages.
+        Perhaps even programming languages.
+        I have not tried that.
+        Yet.</p>
+        <h2>Organisation</h2>
+        <p>Flashcards are organised into decks.
+        To review cards, you pick a deck, and are shown cards that you know all come from that deck.
+        Interleaving topics helps you learn them better.
+        So I mix most subjects into one Default deck.</p>
+        <p>The exception is foreign language.
+        If you alternate languages too readily, you mix them up, and likewise between any foreign language and conceptual native-language material.
+        So I keep Biblical Hebrew in a separate deck.</p>
+        <p>If you study disparate topics interleaved, homonyms can trip you up.
+        A card might ask what <var>R</var> represents.
+        Maybe the expected answer is the <a href="https://en.wikipedia.org/wiki/Gas_constant">universal gas constant</a>, but you could also answer "radius", or "electrical resistance."
+        To fix that, have the card ask what <var>R</var> represents <em>in chemistry</em>, while another might ask what <var>R</var> represents <em>in geometry</em> or <em>in EE</em>.
+        The subject name at the start of a card serves exactly that disambiguating role.</p>
+        <footer><i>Updated 2026-04-20</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>

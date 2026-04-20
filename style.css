@@ -3,6 +3,18 @@ body {
     line-height: 1.5;
     max-width: 40em;
 }
+td, th {
+    border: 1px solid black;
+    padding: 0.3em;
+}
+table {
+    border-collapse: collapse;
+}
+blockquote {
+    margin-left: 0;
+    padding-left: 1em;
+    border-left: 1em solid grey;
+}
 @media (prefers-color-scheme: dark) {
     body {
         background-color: black;
@@ -13,5 +25,8 @@ body {
     }
     a:visited {
         color: fuchsia;
+    }
+    td, th {
+        border-color: lightgrey;
     }
 }
