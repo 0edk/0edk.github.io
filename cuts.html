@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Total edges in minimal cut-sets of complete graphs</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Total edges in minimal cut-sets of complete graphs</h1>
+        <p>My glasses broke into three pieces, two usable.
+        I fixed them with a cable and four glued joints.
+        The glue is indicated in green below.</p>
+        <img src="specs.jpg">
+        <p>This was an amusing feat of low-resource engineering, but the cooler part lies in its mathematical structure.</p>
+        <p>If any one joint broke, the repaired glasses would remain in one piece.
+        If the two glue joints on the left lens broke at once, the left lens would fall off.
+        But if only the two joints between cable and lenses broke, the system would remain in one (less usable) piece.</p>
+        <p>Since this system consists of three pieces (left lens, right lens/frame, cable) joined point-to-point (four gluings), we can model it as a graph with three nodes and four edges.</p>
+        <img src="multigraph.svg">
+        <p>It starts as a connected graph.
+        There are at least three ways to make it disconnected by removing edges.
+        They are called <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cuts</a>.</p>
+        <img src="cuts_34.svg">
+        <p>There are three more ways that are less interesting, insofar as they remove more edges than necessary.
+        That is, those three further cuts each contain another cut as a subset.</p>
+        <img src="excess_cuts.svg">
+        <p>The original three cuts that can't be reduced are called bonds (interchangeably, minimal cuts).
+        Intuitively, the number of edges in a graph's bonds describe how robust the graph is to damage, before it becomes disconnected.
+        The number of edges in the minimum bond makes a good measure.
+        I was more interested in the average number of edges per bond.
+        To find that, you have to find all bonds of a graph.</p>
+        <h2>Algorithm</h2>
+        <p>To find all bonds,</p>
+<pre>
+def bonds(n: int, g: list[Edge]) -&lt; set[tuple[Edge]]:
+</pre>
+        <p>check each set of edges for whether their removal makes the graph disconnected,</p>
+<pre>
+    will_cut: dict[tuple[bool], bool] = {}
+    for r in itertools.product(*((False, True) for i in range(len(g)))):
+        will_cut[tuple(not x for x in r)] = not is_connected(n, g, r)
+</pre>
+        <p>and look among the cuts</p>
+<pre>
+    cuts: set[tuple[Edge]] = set()
+    for k in will_cut:
+        if will_cut[k]:
+</pre>
+        <p>for those which have no cuts as subsets.</p>
+<pre>
+            for i, t in enumerate(k):
+                if t and will_cut[replace(k, i, False)]:
+                    break
+            else:
+                cuts.add(tuple(e for j, e in enumerate(g) if k[j]))
+    return cuts
+</pre>
+        <p>This method gives the right answers, but in time exponential in the number of edges.
+        It is impractical for nontrivial graphs.
+        I asked ChatGPT for a better method.
+        It gave <a href="https://gist.github.com/0edk/3ad42e3ddc9d3c552198376eaba4b1de">an impressively more efficient implementation</a>, which I do not claim to grasp, but which I can confirm is correct as far as I could test it.</p>
+        <h2>Empirical results</h2>
+        <p>The average number of edges per bond is the total edges across all bonds divided by the number of bonds.
+        If I consider not the average but its numerator and denominator, I can turn the problem into Integer Sequences, for which <a href="https://oeis.org/">the Online Encyclopedia</a> is of much use.</p>
+        <p>I ran code to get those two numbers for several <a href="https://en.wikipedia.org/wiki/Category:Parametric_families_of_graphs">families of graphs</a>.</p>
+        <table>
+            <tr><th><var>n</var></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+            <tr><td rowspan="2"><a href="https://en.wikipedia.org/wiki/Complete_graph">complete graphs</a></td><td>*</td><td>1</td><td>6</td><td>24</td><td>80</td><td>240</td><td>672</td><td>1792</td><td>4608</td></tr>
+            <tr><td>*</td><td>1</td><td>3</td><td>7</td><td>15</td><td>31</td><td>63</td><td>127</td><td>255</td></tr>
+            <tr><td rowspan="2"><a href="https://en.wikipedia.org/wiki/Ladder_graph">ladder graphs</a></td><td>1</td><td>12</td><td>39</td><td>86</td><td>157</td><td>256</td><td>387</td><td>554</td><td>761</td></tr>
+            <tr><td>1</td><td>6</td><td>15</td><td>28</td><td>45</td><td>66</td><td>91</td><td>120</td><td>153</td></tr>
+            <tr><td rowspan="2">3-by-<var>n</var> square grids</td><td>2</td><td>39</td><td>204</td><td>739</td><td>2246</td><td>6151</td><td>†</td><td>†</td><td>†</td></tr>
+            <tr><td>2</td><td>15</td><td>53</td><td>146</td><td>356</td><td>809</td><td>†</td><td>†</td><td>†</td></tr>
+            <tr><td rowspan="2"><var>n</var> against <var>n</var>+1 trapezoid truss</td><td>6</td><td>32</td><td>86</td><td>176</td><td>310</td><td>496</td><td>742</td><td>1056</td><td>1446</td></tr>
+            <tr><td>3</td><td>10</td><td>21</td><td>36</td><td>55</td><td>78</td><td>105</td><td>136</td><td>171</td></tr>
+            <tr><td rowspan="2">triangular grid, <var>n</var> nodes per edge</td><td>6</td><td>54</td><td>426</td><td>4200</td><td>†</td><td>†</td><td>†</td><td>†</td><td>†</td></tr>
+            <tr><td>3</td><td>15</td><td>70</td><td>421</td><td>†</td><td>†</td><td>†</td><td>†</td><td>†</td></tr>
+            <tr><td rowspan="2"><a href="https://en.wikipedia.org/wiki/Prism_graph">prism graph</a></td><td>1*</td><td>18*</td><td>87</td><td>300</td><td>825</td><td>1926</td><td>3983</td><td>7512</td><td>13185</td></tr>
+            <tr><td>1*</td><td>6*</td><td>22</td><td>63</td><td>151</td><td>316</td><td>596</td><td>1037</td><td>1693</td></tr>
+            <tr><td rowspan="2"><a href="https://en.wikipedia.org/wiki/Generalized_Petersen_graph">Petersen (<var>n</var>, 2)</a></td><td>1*</td><td>4*</td><td>87</td><td>144*</td><td>1110</td><td>1854*</td><td>9471</td><td>17000*</td><td>66006</td></tr>
+            <tr><td>1*</td><td>3*</td><td>22</td><td>37*</td><td>191</td><td>306*</td><td>1261</td><td>2139*</td><td>7237</td></tr>
+        </table>
+        <p>The first row for each family holds total edges across bonds.
+        The second row holds the number of bonds.
+        A "*" means the value at the spot would be ill-defined.
+        A "†" means the value couldn't be calculated in a reasonable time.</p>
+        <p>I looked up each sequence on <a href="https://oeis.org/">the OEIS</a>.
+        Many had no matches.</p>
+        <ul>
+            <li>The number of bonds in prism graphs exactly matches <a href="https://oeis.org/A307621">A307621</a>, already confirmed in a comment there.</li>
+            <li>Total edges in prism graph bonds are suspiciously close (within a couple percent) to <a href="https://oeis.org/A033276">A033276</a>.</li>
+            <li>The number of bonds in truss graphs fit <a href="https://oeis.org/A014105"><var>n</var> (2 <var>n</var> + 1)</a>.</li>
+            <li>Total edges in truss graph bonds fit (4/3) <var>n</var><sup>3</sup> + 6 <var>n</var><sup>2</sup> - (4/3) <var>n</var>.</li>
+            <li>The number of bonds in 3-by-<var>n</var> grids is <a href="https://oeis.org/A378933">A378933</a> by definition.</li>
+            <li>The number of bonds in a ladder graph fits <var>n</var> (2 <var>n</var> - 1).</li>
+            <li>Total edges in ladder graph bonds fit (2/3) <var>n</var><sup>3</sup> + 4 <var>n</var><sup>2</sup> - (17/3) <var>n</var> + 2.</li>
+            <li>The number of bonds in a complete graph fits 2<sup><var>n</var> - 1</sup> - 1.</li>
+            <li>Total edges in complete graph bonds fit <a href="https://oeis.org/A001788"><var>n</var> (<var>n</var> - 1) 2<sup><var>n</var> - 3</sup></a>.</li>
+        </ul>
+        <p>Those last results, giving exact counts for complete graphs, are now well-understood but deserve to be discussed.</p>
+        <h2>Intuitions for complete graphs</h2>
+        <p>Removing the edges in a cut turn a connected graph into one with at least two connected components.
+        A minimal cut yields exactly two connected components.
+        For suppose it did not, and yielded three or more: the edges between any two components could be restored, and the graph would still be disconnected, showing that a subset of the cut also suffices as a cut.</p>
+        <p>Complete graphs are symmetric enough that choosing two connected components means independently assigning each node to one of two subsets.
+        But, since the components are unordered, this double-counts.
+        And, since assigning all nodes to one component wouldn't truly cut the graph, that one case must be excluded.
+        Thus <var>n</var> nodes can be cut into two connected components in 2<sup>n - 1</var> - 1 ways.</p>
+        <p>The two components left after each minimal cut must be complete graphs.
+        For suppose they were not: the edges "missing" from them, that make them complete, could be restored, and the graph would still be disconnected, showing that a subset of the cut also suffices as a cut.</p>
+        <p>A complete graph on <var>n</var> nodes has <var>n</var> (<var>n</var> - 1) / 2 edges.
+        A minimal cut preserves a subgraph with <var>k</var> nodes and another with <var>n</var> - <var>k</var> nodes.
+        Respectively, those subgraphs have <var>k</var> (<var>k</var> - 1) / 2 and (<var>n</var> - <var>k</var>) (<var>n</var> - <var>k</var> - 1) / 2 edges.
+        The difference lies in the edges removed by the cut, which thus number <var>k</var> (<var>n</var> - <var>k</var>).</p>
+        <p>There are <var>k</var> (<var>n</var> - <var>k</var>) edges in each of the <var>C</var>(<var>n</var>, <var>k</var>) / 2 minimal cuts that separate a subgraph of <var>k</var> nodes from a subgraph of <var>n</var> - <var>k</var>.
+        This <var>k</var> can vary from 1 to <var>n</var> - 1, inclusive.
+        So the total number of edges in bonds is the sum from <var>k</var> = 1 to <var>n</var> - 1 of <var>k</var> (<var>n</var> - <var>k</var>) <var>C</var>(<var>n</var>, <var>k</var>) / 2.</p>
+        <h2>Combinatorial proof</h2>
+        <p>Empirically, that sum simplifies to <var>n</var> (<var>n</var> - 1) 2<sup><var>n</var> - 3</sup>.
+        Outside this graph problem, both expressions count ways to pick out two Excluded Items from <var>n</var>, then assign either Red or Green to each remaining item.</p>
+        <p>Consider how many of <var>n</var> items are Excluded Item A or Red; call that <var>k</var>.
+        It must vary from 1 (EIA is guaranteed) to <var>n</var> - 1 (EIB is guaranteed).
+        Given one value of <var>k</var>, there are <var>k</var> choices for EIA among this subset, and independently <var>n</var> - <var>k</var> choices for EIB among the remainder.
+        There are <var>C</var>(<var>n</var>, <var>k</var>) choices for how to mix this first subset into the original set.
+        Since EIA and EIB aren't distinguished at the end, we double-counted and divide by 2.
+        Hence the above sum.</p>
+        <p>Picking out two items happens in <var>C</var>(<var>n</var>, 2) = <var>n</var> (<var>n</var> - 1) / 2 ways, and assigning Red or Green to the remainder is <var>n</var> - 2 independent choices, i.e. 2<sup><var>n</var> - 2</sup> options.
+        Hence the above product.</p>
+        <footer><i>Updated 2026-05-11</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
