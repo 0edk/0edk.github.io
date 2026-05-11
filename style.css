@@ -29,4 +29,7 @@ blockquote {
     td, th {
         border-color: lightgrey;
     }
+    img {
+        filter: invert();
+    }
 }
