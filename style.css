@@ -15,6 +15,9 @@ blockquote {
     padding-left: 1em;
     border-left: 1em solid grey;
 }
+.lyrics {
+    white-space: pre-line;
+}
 @media (prefers-color-scheme: dark) {
     body {
         background-color: black;
