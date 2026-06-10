@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simplified Contact game</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Simplified Contact game</h1>
+        <p>Contact is a popular and poorly-documented verbal game.
+        I have taught it to people and found it hard to teach.
+        Recently I found a simplified game with the same core mechanics.
+        We should be able to <a href="https://www.jefftk.com/p/simplifying-board-games">play this version and leave the details for later</a>.</p>
+        <h2>Literal rules</h2>
+        <p>Three or more players pick one among them as Leader, trying to prolong the game; the rest are Crowd, trying to finish the game.
+        Leader picks the Secret Word.
+        The game ends when the Secret Word is spoken.</p>
+        <p>The game begins in round 1.
+        For each round <var>n</var>, a Matching Word is one that has the same first <var>n</var> letters as the Secret Word.
+        Leader spells those <var>n</var> letters at the start of each round.
+        Advance to the next round when and only when two or more of Crowd simultaneously say the same Matching Word that hasn't been spoken before in the game.</p>
+        <h2>Clarifying rules</h2>
+        <p>Speech for the game should be audible to all players.</p>
+        <p>For Crowd players to say words simultaneously, they must synchronise.
+        Commonly, one player prompts the rest with a clue.
+        If Leader recognises the Matching Word so hinted, they say that word; as it is then spoken in the game, that particular word cannot be used to end a round.
+        If a Crowd member recognises the clue, they say so, such as with the keyword "contact", and the two members say it at once; if they speak mismatched words, the attempt fails, and both words are invalid for later use.</p>
+        <p>The Secret Word, Matching Words, and speech in the game should all be "words".
+        What this means (whether to allow proper nouns, loanwords, other languages) is up to the players.
+        The Secret Word should be a word at least as strictly as game conversation, which should consist of words at least as strictly as Matching Words.</p>
+        <p>"When the Secret Word is spoken" and "the same Matching Word" assume a rule to consider words the same or different.
+        Words are the same if they're inflected from the same root, so "admire" and "admiring" are the same word, but "admiral" is different.</p>
+        <p>In round <var>n</var> for which the Secret Word has <var>n</var> letters, Leader will have spelled the entire Secret Word.
+        Thus any player can trivially say the Secret Word and end the game.
+        This is recommended.
+        If Crowd members keep saying Matching Words in sync, <a href="https://en.wikipedia.org/wiki/Undefined_behavior">undefined behaviour</a> ensues.</p>
+        <h2>Example game</h2>
+        <p>Sam, Leslie, Alex, and Pat play Contact.
+        Leslie is Leader.
+        Thus Sam, Alex, and Pat are Crowd.
+        <i>The Secret Word is "adverse"</i>, thinks Leslie.</p>
+        <p>"It starts with A," says Leslie, to start round 1.</p>
+        <p>"Severe pain," says Alex.</p>
+        <p>"Agony," notes Leslie, to Crowd's disappointment.
+        They all know the word, but Leslie grasped it faster.</p>
+        <p>"February," hints Pat.
+        Pat and Sam looked into <a href="https://en.wikipedia.org/wiki/Birthstone">birthstones</a> a while back.
+        Leslie knows nothing of this.</p>
+        <p>"Contact," says Sam.
+        "Amethyst," they say together with Pat.</p>
+        <p>"A-D," spells Leslie.</p>
+        <p>"'We do not sell data to' &mdash;" hints Sam.</p>
+        <p>Alex was also <a href="https://techcrunch.com/2018/04/10/mark-zuckerberg-we-do-not-sell-data-to-advertisers/">online in 2018</a>.
+        "Got it," they say, then, together with Sam, "Advertisers!"</p>
+        <p>"A-D-V," spells Leslie.</p>
+        <p>"Advanced?" guesses Pat. "Adversity? Advantage?"</p>
+        <p>"You got it," admits Leslie, recognising the noun inflection as equivalent. "Adverse."</p>
+        <footer><i>Updated 2026-06-10</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
