@@ -1,10 +1,32 @@
 #!/usr/bin/env python3
-import re
+import collections
+import datetime
 import os
+import re
+import sys
+
+script_mode: str = ""
+if len(sys.argv) == 1:
+    script_mode = "lint"
+if len(sys.argv) == 3:
+    new_filename = sys.argv[1]
+    new_title = sys.argv[2]
+    if " " in new_filename and " " not in new_title:
+        new_filename, new_title = new_title, new_filename
+    if "." not in new_filename:
+        new_filename += ".html"
+    if new_filename.endswith(".html"):
+        script_mode = "new"
+if not script_mode:
+    print("invalid usage")
+    sys.exit(1)
 
 BLOG_ENTRY = re.compile("<a href=\"([^\"]+)\">([^<]+)</a>")
+PAGE_START = re.compile("^<!.*</h1>", flags=re.MULTILINE | re.DOTALL)
 HEAD_TITLE = re.compile("<title>([^<]+)</title>")
 H1_TITLE = re.compile("<h1>([^<]+)</h1>")
+PAGE_END = re.compile("^ *<footer>.*</html>", flags=re.MULTILINE | re.DOTALL)
+DATE_LIKE = re.compile("[0-9][-0-9]+")
 FOOTER = re.compile("<footer><i>Updated [-0-9]+</i>"
     "( - <a href=\"[^\"]+\">[^<]+</a>)?")
 PIC_REF = re.compile("<img src=\"([^\"]+)\"")
@@ -27,31 +49,51 @@ with open("index.html", "r") as f:
 local_pages: set[tuple[str, str]] = set()
 pics_used: set[str] = set()
 pics_avail: set[str] = set()
+headers: collections.Counter[str] = collections.Counter()
+footers: collections.Counter[str] = collections.Counter()
 for filename in os.listdir():
     if filename.endswith(".html"):
-        if filename != "index.html":
-            with open(filename, "r") as f:
-                page_text = f.read()
-            head_title = HEAD_TITLE.search(page_text)
-            if not head_title:
-                print(f"no <title> in {filename}")
-            h1_title = H1_TITLE.search(page_text)
-            if not h1_title:
-                print(f"no <h1> in {filename}")
-            if head_title and h1_title:
-                if head_title.group(1) == h1_title.group(1):
-                    local_pages.add((filename, head_title.group(1)))
-                else:
-                    print(f"mismatched titles in {filename}")
-            footer = FOOTER.search(page_text)
-            if not footer:
-                print(f"no footer in {filename}")
-            for pic in PIC_REF.finditer(page_text):
-                pics_used.add(pic.group(1))
+        with open(filename, "r") as f:
+            page_text = f.read()
+        full_header = H1_TITLE.sub("<h1>TITLE</h1>", HEAD_TITLE.sub(
+            "<title>TITLE</title>", PAGE_START.search(page_text).group(0)
+        ))
+        headers[full_header] += 1
+        head_title = HEAD_TITLE.search(page_text)
+        if not head_title:
+            print(f"no <title> in {filename}")
+        h1_title = H1_TITLE.search(page_text)
+        if not h1_title:
+            print(f"no <h1> in {filename}")
+        if head_title and h1_title:
+            if head_title.group(1) == h1_title.group(1):
+                local_pages.add((filename, head_title.group(1)))
+            else:
+                print(f"mismatched titles in {filename}")
+        full_footer: str = DATE_LIKE.sub("DATE", PAGE_END.search(
+            page_text
+        ).group(0))
+        footers[full_footer] += 1
+        footer = FOOTER.search(page_text)
+        if not footer:
+            print(f"no footer in {filename}")
+        for pic in PIC_REF.finditer(page_text):
+            pics_used.add(pic.group(1))
     elif os.path.splitext(filename)[1] in [".gif", ".jpg", ".png", ".svg"]:
         pics_avail.add(filename)
 
-print("broken links:", indexed_pages - local_pages)
-print("hidden pages:", local_pages - indexed_pages)
-print("broken images:", pics_used - pics_avail)
-print("unused images:", pics_avail - pics_used)
+if script_mode == "lint":
+    print("broken links:", indexed_pages - local_pages)
+    print("hidden pages:", local_pages - indexed_pages)
+    print("broken images:", pics_used - pics_avail)
+    print("unused images:", pics_avail - pics_used)
+    print("header styles:", (+headers).most_common())
+    print("footer styles:", (+footers).most_common())
+elif script_mode == "new":
+    with open(new_filename, "x") as f:
+        f.write(headers.most_common(1)[0][0].replace("TITLE", new_title))
+        f.write("\n")
+        today = str(datetime.date.today())
+        f.write(footers.most_common(1)[0][0].replace("DATE", today))
+    editor = os.environ["EDITOR"]
+    os.execvp(editor, [editor, new_filename])
