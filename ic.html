@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Excerpts from Chaotic Ideas</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Excerpts from Chaotic Ideas</h1>
+        <p>From 2019 thru 2021, as a teenager, I wrote in a notebook.
+        Much of the content was technical.
+        I titled it "Chaotic Ideas".</p>
+        <p>As we can expect from the title and context, much of it was rubbish, or meaningless out of context.
+        Some of it, less so, and I present that here in order of where it was written in the book.</p>
+        <hr>
+        <p>I tried to draw a bunch of software logos.
+        They may have been done from memory, or with reference to the original, but limited by my poor drawing skills in those days.</p>
+        <img src="logos.jpg">
+        <p>Top-to-bottom, left-to-right:
+        Arch Linux, Manjaro, Ubuntu, BusyBox (?), dwm (suckless), Zig, Lua;
+        Tux (Linux), Artix Linux, Debian, Gentoo Linux, GNU, st (suckless), sxiv (suckless-adjacent), NixOS (?);
+        Alpine Linux, Red Hat, dwm (suckless), sxiv (restyled), unrecognisable, Guix (?), Vim;
+        Replit (pre-2022), Eudora email client (?), Gentoo Linux (again), Tux (again), Geany, Windows;
+        VLC, Python, Rust (2x), Replit (again, fragment), Windows (again);
+        GIMP (?), Blender, Firefox (2x), VirtualBox (pre-2024), Ubuntu (again), Discord (2x).</p>
+        <blockquote>perhaps [<code>strcmp</code> timing vulnerabilities] could be mitigated while having fast code by starting byte-by-byte comparisons at a RANDOMLY SELECTED point in the string</blockquote>
+        <p>This wouldn't work so well in normal C, because to pick a valid starting point, you'd need to know the length of the string.
+        But it seems effective if you know the lengths of the strings in advance (no separate call to <code>strlen</code>).</p>
+        <blockquote>Mouse/trackball alternative that wraps around middle finger, and uses pointing for cursor movement, and other fingers to press buttons/wheel on sides</blockquote>
+        <img src="finger_mouse.jpg">
+        <p>"Pointing for cursor movement" is the hard part.
+        What do we do for that?
+        Coloured marker and a webcam?
+        Light sensor in the screen?
+        Highly clever accelerometers?</p>
+        <p>What if we embedded a clock (or other trivial appliance) in an extension cord?
+        What if the "cord" was really short and rigid?</p>
+        <img src="clock.jpg">
+        <img src="ubuntu.jpg">
+        <p>On 2020-09-30, I estimated what my Linux laptop configuration might look like.
+        This was probably before I had tried Linux in VMs, let alone on bare hardware.</p>
+        <p>Apps depicted in the grid, top-to-bottom, left-to-right (✓ = actually used now, ✗ = abandoned in practice):
+        Anki (✓), Blender (✓), GNOME Cheese (✗), Flatpak (✗), Geany (✗, Neovim instead), GIMP (✗, ImageMagick/Flameshot), Hyperbolica (✗), Inkscape (✗);
+        IntelliJ IDEA (✗), LaTeX (✗, command-line Typst), LibreOffice Calc (✗, Gnumeric), LibreOffice Impress (✗);
+        mpv (✓), Nautilus (✗, fish), NetSurf (✗, Lynx), OBS Studio (✗, ffmpeg), OpenShot Video Editor (✗, ffmpeg);
+        Terminal (✓, but foot, not GNOME), Oracle VirtualBox (✗).</p>
+        <blockquote>numbers from pure associative arrays:
+        0 = {}, 1 = {{}:{}}, 2 = {0:1}, 3 = {1:0}, 4 = {1:0, 0:0}, 5 = {1:0, 0:1},
+        0s10 = {1:1}, 0s11 = {1:1, 0:0}, 0s12 = {1:1, 0:1}, 0s13 = {0:2}</blockquote>
+        <p>That is, we can make a total ordering on the set of recursively-constructed dictionaries, and from that a bijection to the natural numbers.
+        This looks to be inspired by the <a href="https://en.wikipedia.org/wiki/Ordinal_number#Von_Neumann_definition_of_ordinals">von Neumann representation of ordinals</a>.
+        The 0sN notation indicates <a href="https://en.wikipedia.org/wiki/Senary">seximal</a>, with which I was quite enamoured at the time, by analogy to 0xN for hexadecimal.</p>
+        <blockquote>group an image into the largest possible contiguous regions of acceptably similar colour, then quantise the image by replacing each group of pixels with copies of a single representative colour</blockquote>
+        <p>This feels reminiscent of the techniques in <a href="https://github.com/vkcz/quadtree_img">vkcz's <code>quadtree_img</code></a>.
+        From what I skimmed of the source code, I didn't recognise this particular method.</p>
+        <blockquote>algorithmically quantify the difference between pairs of images, using this information to dynamically set the framerate of a video so as to make the image-difference between adjacent frames below a threshold</blockquote>
+        <p>I think this means we'd need a way to interpolate finer-grained frames.</p>
+        <blockquote>A prime number multiplied by an odd number will never be between two adjacent twin primes (except in trivial cases like 3)</blockquote>
+        <p>There's much mathematically-immature folly to laugh at here.
+        But, for a real proof:</p>
+        <ol>
+            <li>prime numbers except 2 are odd</li>
+            <li>odd times odd is odd</li>
+            <li>by (1), twin-prime pairs each surround an even number</li>
+            <li>by (2) and (3), odd times odd can't be between twin primes</li>
+            <li>2 times odd is 2 mod 4</li>
+            <li>by (1) and (5), prime times odd only lands between twin primes if the twin primes are 1 and 3 mod 4 (in order)</li>
+        </ol>
+        <p>I don't know how to prove it from here.
+        But the conjecture still holds well beyond what past-me would've checked.</p>
+        <pre>echo <a href="https://oeis.org/A001359">'...'</a> | python -c 'list(print((int(n) + 1) // 2) for n in input().split(", "))' | factor</pre>
+        <blockquote>
+<pre>fn rsh(x: u8) -&gt; u8 {
+    let mut r = 0;
+    let mut t = 1;
+    let mut n = 2;
+    while n != 0 {
+        if x & n != 0 {
+            r |= t;
+        }
+        t = n;
+        n = n.wrapping_add(n);
+    }
+    r
+}</pre>
+        </blockquote>
+        <p>That's a one-bit right-shift in Rust without using the native instruction.
+        <a href="https://bisqwit.iki.fi/story/howto/bitmath/#WhenYouDoNotHaveAnyBitOperations">Yliluoma 2014</a> has the same idea, in a more comprehensive list.</p>
+        <img src="arcgrid.svg">
+        <p>The above was crudely drawn by hand in the notebook.
+        I replicated it today with Python:</p>
+<pre>import math
+from matplotlib import pyplot as plt
+
+rad: int = 5
+fig, ax = plt.subplots()
+fig.tight_layout()
+fig.set_size_inches(4.0, 4.0)
+ax.set_axis_off()
+ax.axis((-rad, rad, -rad, rad))
+
+for layer in range(rad):
+    ax.add_patch(plt.Circle((0, 0), layer + 1, fill=False))
+    steps: int = 4 * (2 * layer + 1)
+    for step in range(steps):
+        angle: float = math.tau * step / steps
+        ax.plot(
+            (layer * math.cos(angle), (layer + 1) * math.cos(angle)),
+            (layer * math.sin(angle), (layer + 1) * math.sin(angle)),
+            color="black",
+        )
+
+fig.savefig("arcgrid.svg")</pre>
+        <p>It might not look like it, but according to my calculations, each arc-section has the same area.</p>
+        <blockquote>
+<pre>const MAX_DENOM: i32 = 100;
+const TARGET: f64 = std::f64::consts::PI;
+
+fn main() {
+    let mut cur = 1.0;
+    for denom in 0..MAX_DENOM {
+        let p = (denom as f64 * TARGET).round()
+            / (denom as f64);
+        if (p - TARGET).abs() &lt;
+            (cur - TARGET).abs() {
+            println!("{}/{} ({})",
+                (denom as f64 * TARGET).round(),
+                denom,
+                p);
+            cur = p;
+        }
+    }
+}</pre>
+        </blockquote>
+        <p>That Rust code works verbatim to find rational approximations to an irrational number.
+        It would be more efficient to descend the <a href="https://mathworld.wolfram.com/FareySequence.html">Farey sequence</a>.</p>
+        <blockquote>TRUST - Time-Revoked Update Sequence Transmission (2021-05-29)
+            <ul>
+                <li>three types of participants: writers, servers, and readers</li>
+                <li>writers compose and send updates</li>
+                <li>each writer has a digital signature keypair</li>
+                <li>updates are of the form SIG DTS LDN GDN CHN MSG</li>
+                <li>SIG is the writer's digital signature for the rest of the update</li>
+                <li>DTS is a timestamp to indicate when the update was originally created</li>
+                <li>LDN and GDN are used by readers for verification, as described later (they are time quantities)</li>
+                <li>CHN is a "channel" identifier, as described later</li>
+                <li>MSG is arbitrary data; it is the content of the update</li>
+                <li>writers must, after publishing an update to some channel, publish another updated to the same channel between DTS + LDN and DTS + GDN</li>
+                <li>servers listen for and store updates published from authors [writers?]</li>
+                <li>servers may also receive updates from other servers; this decentralisation is the main point of the protocol</li>
+                <li>readers request updates for a given channel and public key (writer) from a server</li>
+                <li>readers verify signatures on updates to protect against "forgery"</li>
+                <li>readers check if the server's data is up-to-date by comparing the current time (DTC) with the times specified in the most recent update on the channel:
+                    <ul>
+                        <li>DTC &lt; DTS: writer violated protocol [claimed to time-travel]</li>
+                        <li>DTS &lt; DTC &lt; DTS + LDN: up-to-date</li>
+                        <li>DTS + LDN &lt; DTC &lt; DTS + GDN: may or may not be up-to-date</li>
+                        <li>DTS + GDN &lt; DTC: definitely out-of-date</li>
+                    </ul></li>
+            </ul>
+        </blockquote>
+        <p>Unlike simpler and more common protocols, servers can't lie about when a writer posts updates.</p>
+        <img src="alpine.jpg">
+        <p>Still about a year before I fully used Linux, I had anticipated my eventual Alpine Linux setup quite accurately:</p>
+        <ul>
+            <li>most things in terminal windows under suckless dwm</li>
+            <li>Vim/Zathura document-writing workflow</li>
+            <li>IRC use in what looks like irssi</li>
+            <li>customised status bar</li>
+        </ul>
+        <p>The keyboard is shown in the <a href="https://workmanlayout.org/">Workman layout</a>, which I used for a year or two before I settled on Dvorak.
+        What could "lazop" possibly refer to, you ask?</p>
+        <blockquote>2021-05-22: Design principles of the previously-introduced [but on a later page] operator-oriented programming language ...
+            <ul>
+                <li>syntactic uniformity through focus on operators/operations</li>
+                <li>powerful type system</li>
+                <li>self-consistent omnipresent object system [an unconventional jumble of buzzwords whose meaning is now lost on me]</li>
+                <li>partially lazy evaluation</li>
+                <li>code can be data</li>
+                <li>everything is an expression</li>
+            </ul>
+            Various design notes:
+            <ul>
+                <li>temporary name of language: "lazop" [lazy operators]</li>
+                <li>all expressions (the whole program is one) are one of:
+                    <ul>
+                        <li>simple literal</li>
+                        <li>parenthesised subexpr.</li>
+                        <li>curly-bracket-enclosed code block</li>
+                        <li>square-bracket-enclosed, comma-separated list constructor</li>
+                        <li>subexpr-operator-subexpr</li>
+                    </ul></li>
+                <li>each expression is evaluated with a target return type; if the expression cannot be evaluated in a way that would return that type, there is an error</li>
+                <li>available operators (non-exhaustive): <code>! $ % &amp; * + - . / : ; &lt; = &gt; ? @ ^ | ~ &lt;&lt; &gt;&gt; &amp;&amp; || == &gt;= &lt;= != ** +- */ += -= /= &amp;= |= &lt;&lt;= &gt;&gt;=</code></li>
+                <li>primitive types (nonexhaustive): <code>UInt8 Int32 Float64 Ident String CodeBlock Null Bool Reader Writer BigInt</code></li>
+                <li>generic/compound types (non-exhaustive): <code>LValue(T) Object(T) Pair(T, U) List(T) Function(P, R) HashMap(K, V)</code></li>
+            </ul>
+            ...
+            Whilst syntactic regularity is cool, when taken to the extreme (as in LisP), it can be horrendously detrimental to usability.
+            As such, I'm starting to design an ultra-high-level operator-oriented programming language.
+            Speculative sample below:
+<pre>factorial = function@((n:Int32):Int32:{
+    (n&lt;=1)?({1}:{(factorial@(n-1))*n})
+}); stdout@"What ... is your name?";
+name:String = stdin@_; (name == "Steve")?{
+    factorial@10 # Steve gets to know 10!
+}:{ stdout@"Begone!" }</pre>
+        </blockquote>
+        <p>I never implemented Lazop as described.
+        The train of thought did inspire the very real, twice-implemented <a href="https://github.com/0edk/skim-language">Skim language</a>.
+        I remain tempted to implement more operator-oriented language(s), tho my more recent designs are less recklessly ambitious.</p>
+        <blockquote>2021-05-20: a social media/user-generated-content platform which improves upon the user-upvote system by automatically assigning users together (invisibly) as "friends" based on voting similarity and showing post scores to users adjustedly [sic] based on the "friendships" between the voters and the viewers</blockquote>
+        <p>That is, the platform would cluster users by their observed taste in posts, and rank posts for each user in a way calibrated to their taste.
+        I suspect contemporary "algorithmic" social media achieves similar effects, but I would've intended an approach more transparently formulaic:</p>
+        <blockquote>
+            [users A, B, C, D raw votes on posts a, b, c, d, e, f]
+            <table>
+                <tr><td></td><td>a</td><td>b</td><td>c</td><td>d</td><td>e</td><td>f</td></tr>
+                <tr><td>A</td><td>+</td><td>+</td><td>0</td><td>-</td><td>+</td><td>0</td></tr>
+                <tr><td>B</td><td>0</td><td>+</td><td>0</td><td>0</td><td>+</td><td>+</td></tr>
+                <tr><td>C</td><td>-</td><td>0</td><td>-</td><td>+</td><td>+</td><td>0</td></tr>
+                <tr><td>D</td><td>+</td><td>+</td><td>+</td><td>+</td><td>+</td><td>+</td></tr>
+            </table>
+            [users' friendship coefficients to each other user]
+            <table>
+                <tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td></tr>
+                <tr><td>A</td><td>x</td><td>+2</td><td>-1</td><td>+2</td></tr>
+                <tr><td>B</td><td>+2</td><td>x</td><td>+1</td><td>+3</td></tr>
+                <tr><td>C</td><td>-1</td><td>+1</td><td>x</td><td>0</td></tr>
+                <tr><td>D</td><td>+2</td><td>+3</td><td>0</td><td>X</td></tr>
+            </table>
+            [users' perceived ratings: dot products of raw votes and friendships]
+            <table>
+                <tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td></tr>
+                <tr><td>a</td><td>+3</td><td>+4</td><td>-1</td><td>+2</td></tr>
+                <tr><td>b</td><td>+4</td><td>+5</td><td>0</td><td>+5</td></tr>
+                <tr><td>c</td><td>+3</td><td>+2</td><td>0</td><td>0</td></tr>
+                <tr><td>d</td><td>+1</td><td>+2</td><td>+1</td><td>-2</td></tr>
+                <tr><td>e</td><td>+3</td><td>+6</td><td>0</td><td>+5</td></tr>
+                <tr><td>f</td><td>+4</td><td>+3</td><td>+1</td><td>+3</td></tr>
+            </table>
+        </blockquote>
+        <blockquote>browser extension or similar to find all username-like items on the page, so as to insert arbitrary-but-consistent autogenerated "profile pictures" to go with each user, for recognition of users beyond names</blockquote>
+        <p>The standard term is "identicon", and there are programs like this, but not for usernames-in-general as I propose, as far as I know.</p>
+        <p>Around this point, several pages are filled to calculate square roots by hand to four decimal places.
+        One must imagine the hapless fool unaware of the 21st century's ubiquitous calculators.</p>
+        <hr>
+        <p>Chaotic Ideas is long and confusing to read.
+        I will return to add more excerpts from the remaining 80 pages.<p>
+        <footer><i>Updated 2026-07-09</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
