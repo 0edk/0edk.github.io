@@ -33,8 +33,7 @@ const DISTROS = [
     "EndeavourOS",
 ];
 shuffle(DISTROS);
-const SUFFIXES = ["Linux", "OS", "GNU/Linux"];
-shuffle(SUFFIXES);
+const SUFFIXES = ["GNU/Linux", "Linux", "OS"];
 const EXT_SUFFIXES = ["none"].concat(SUFFIXES);
 
 function elemText(tag, text) {
