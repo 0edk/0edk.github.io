@@ -18,14 +18,14 @@
         But if you, unlike entrenched mathematicians, have any respect for physical reality, you have another way to find the volume of a sphere, or any other shape. 
         Build the shape from dense material, submerge it in water, measure how high the water rose, and calculate the displaced volume.
         For a more general formula, build and submerge the shape at several sizes, then do the requisite statistics.</p>
-        <img src="displace.png">
+        <img src="displace.png" alt="a beaker holds 150 mL of water while a screw sits nearby, and then the screw is dropped into the water, which rises to 180 mL, this difference (delta V) measuring the volume of the screw">
         <p><small><a href="https://commons.wikimedia.org/wiki/File:Displacement-measurement.svg">Wikimedia Commons User:MikeRun, 2022, CC BY-SA 4.0</a></small></p>
         <p>There is no good general method like that to measure areas.
         The closest equivalent would be to paint the entire surface, and measure how much paint you used, being impractically careful to use a constant thickness of paint.
         So it would be convenient to find surface area using volume.</p>
         <p>Let's cut off a shell from around the sphere.
         Say the shell is <var>a</var> units thick.</p>
-        <img src="shelled.svg">
+        <img src="shelled.svg" alt="the inner sphere has radius r - a, and the shell is spherical but hollow, with an inner radius r - a and an outer radius r">
         <p>Since the shell is at the surface, it should relate to area, and since the shell has some thickness, it should relate to volume.</p>
         <p>The shell is almost a sheet, so its volume is (almost) its area times its thickness, <var>A</var> <var>a</var>.
         Since the inner sphere plus the shell make the original sphere, we have <var>V</var><sub>0</sub> + <var>A</var> <var>a</var> = <var>V</var>.
@@ -50,10 +50,10 @@
         <p>This increment-ratio method also works to find volume given area.
         Let's find the volume of a cone.
         To be specific, say it's a right circular cone (the usual kind) with radius <var>r</var> and height <var>h</var>.</p>
-        <img src="cone.svg">
+        <img src="cone.svg" alt="from the tip of the cone to the centre of its base is the length h, and from the centre of the base to the edge of the base is length r">
         <p>Let's cut off a slice from the bottom of the cone.
         Say the slice is <var>a</var> units thick.</p>
-        <img src="sliced.svg">
+        <img src="sliced.svg" alt="the unsliced cone has height h - a and some base radius &lt; r, while the slice that would snugly join to its base has height a and base radius r, matching the full cone">
         <p>The unsliced remainder of the cone then has height <var>h</var> - <var>a</var>.
         Its radius is less trivial.
         As a scaled-down version of the original cone, this lesser cone's radius would be a scale factor times the original radius.
@@ -62,7 +62,7 @@
         Here, the narrow end has the scaled radius (1 - <var>a</var> / <var>h</var>) <var>r</var>, and the wider end has the original radius <var>r</var>.
         Roughly, its volume is that of a cylinder with a radius halfway between those:
         (1/2) <var>τ</var> ((1 - <var>a</var> / (2 <var>h</var>)) <var>r</var>)<sup>2</sup> <var>a</var>.</p>
-        <img src="cylindered.svg">
+        <img src="cylindered.svg" alt="the unsliced cone has base radius (1 - a/h) r, while the frustum slice can be approximated by a cylinder of height a and radius (1 - a/(2h)) r">
         <p>We can treat this cylinder-volume as an increment upon the unknown unsliced-cone-volume.</p>
         <p>Since the lesser cone is scaled equally in every dimension from the original, its volume is also scaled cubically.
         So we have a ratio (1 - <var>a</var> / <var>h</var>)<sup>3</sup> between their volumes.</p>

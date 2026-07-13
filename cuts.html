@@ -12,20 +12,20 @@
         <p>My glasses broke into three pieces, two usable.
         I fixed them with a cable and four glued joints.
         The glue is indicated with letters below.</p>
-        <img src="specs.jpg">
+        <img src="specs.jpg" alt="a cable runs from the bridge of glasses (joined at B on the right and A on the left) past where the left arm should be, to connect to the right arm at joint D, while joint C connects two halves of the front section">
         <p>This was an amusing feat of low-resource engineering, but the cooler part lies in its mathematical structure.</p>
         <p>If any one joint broke, the repaired glasses would remain in one piece.
         If the two glue joints A and C on the left lens broke at once, the left lens would fall off.
         But if only the two joints A and B between cable and lenses broke, the system would remain in one (less usable) piece.</p>
         <p>Since this system consists of three pieces (left lens, right lens/frame, cable) joined point-to-point (four gluings), we can model it as a graph with three nodes and four edges.</p>
-        <img src="multigraph.svg">
+        <img src="multigraph.svg" alt="TGF: 1 left lens; 2 right lens/frame; 3 cable; # 1 3 A; 2 3 B; 2 3 C; 1 2 D;">
         <p>It starts as a connected graph.
         There are at least three ways to make it disconnected by removing edges.
         They are called <a href="https://en.wikipedia.org/wiki/Cut_(graph_theory)">cuts</a>.</p>
-        <img src="cuts_34.svg">
+        <img src="cuts_34.svg" alt="remove edges A, C to disconnect {left lens} from {right lens/frame, cable}, or remove edges B, C, D to disconnect {right lens/frame} from {left lens, cable}, or remove edges A, B, D to disconnect {cable} from {left lens, right lens/frame}">
         <p>There are three more ways that are less interesting, insofar as they remove more edges than necessary.
         That is, those three further cuts each contain another cut as a subset.</p>
-        <img src="excess_cuts.svg">
+        <img src="excess_cuts.svg" alt="removing edges A, B, C is excessive, likewise removing edges A, C, D or edges A, B, C, D">
         <p>The original three cuts that can't be reduced are called bonds (interchangeably, minimal cuts).
         Intuitively, the number of edges in a graph's bonds describe how robust the graph is to damage, before it becomes disconnected.
         The number of edges in the minimum bond makes a good measure.

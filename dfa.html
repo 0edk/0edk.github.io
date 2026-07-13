@@ -10,7 +10,7 @@
     <body>
         <h1>How to grasp a DFA if you don't grasp DFAs</h1>
         <p>Do you see what language this <a href="https://en.wikipedia.org/wiki/Deterministic_finite_automaton">DFA</a> accepts?</p>
-        <img src="dfa.svg">
+        <img src="dfa.svg" alt="starting state A, accepting states A, C, consume character 0 or 1 to move A to B or C, B to A or C, C to D or B, and D to C or B, all respectively">
         <p>The automaton, drawn better, is exercise 2.6c in <i>Introduction to Automata Theory, Languages, and Computation</i> (Hopcroft and Ullman, 1979).
         Presumably, a smart human could solve it.
         Part (a) was trivial.
@@ -71,7 +71,7 @@
             <li>"Trailing 0s" are ill-defined for the input number zero.
             Empirically, the original DFA accepts any string of an even number of 0s, as if it starts with (1s even, trailing 0s odd).</li>
         </ul>
-        <img src="parities.svg">
+        <img src="parities.svg" alt="same DFA as above, with A = 1s even, trailing 0s odd, B = 1s even, trailing 0s even, C = 1s odd, trailing 0s even, and D = 1s odd, trailing 0s odd">
         <p>Up to labelling, this is identical to what we started with.
         To answer Hopcroft and Ullman: finite automaton (c) accepts those binary strings with a positive number of 1s opposite in parity to the number of trailing 0s, or holding no 1s but an even number of 0s.</p>
         <footer><i>Updated 2026-04-19</i> - <a href="index.html">homepage</a></footer>

@@ -29,7 +29,9 @@ PAGE_END = re.compile("^ *<footer>.*</html>", flags=re.MULTILINE | re.DOTALL)
 DATE_LIKE = re.compile("[0-9][-0-9]+")
 FOOTER = re.compile("<footer><i>Updated [-0-9]+</i>"
     "( - <a href=\"[^\"]+\">[^<]+</a>)?")
-PIC_REF = re.compile("<img src=\"([^\"]+)\"")
+FULL_PIC_REF = re.compile("<img ([^>]+)")
+PIC_SOURCE = re.compile("src=\"([^\"]+)\"")
+PIC_ALT = re.compile("alt=\"([^\"]+)\"")
 
 with open("index.html", "r") as f:
     indexed_pages: set[tuple[str, str]] = set()
@@ -77,8 +79,16 @@ for filename in os.listdir():
         footer = FOOTER.search(page_text)
         if not footer:
             print(f"no footer in {filename}")
-        for pic in PIC_REF.finditer(page_text):
-            pics_used.add(pic.group(1))
+        for pic in FULL_PIC_REF.finditer(page_text):
+            attrs = pic.group(1)
+            src = PIC_SOURCE.search(attrs)
+            if src:
+                pics_used.add(src.group(1))
+            else:
+                print(f"no src=... in {pic.group(0)} of {filename}")
+            alt = PIC_ALT.search(attrs)
+            if not alt:
+                print(f"no alt=... in {pic.group(0)} of {filename}")
     elif os.path.splitext(filename)[1] in [".gif", ".jpg", ".png", ".svg"]:
         pics_avail.add(filename)
 
