@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Increment-ratio method to relate volume and area</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Increment-ratio method to relate volume and area</h1>
+        <p>What's the surface area of a sphere?
+        To be specific, say it has radius <var>r</var>.</p>
+        <p>You might have memorised that the area is 2 <var>τ</var> <var>r</var><sup>2</sup>.
+        If you haven't, but you know calculus, you could set up an integral to calculate the area.
+        Is there another way?</p>
+        <p>The volume of a sphere is also well known, as (2/3) <var>τ</var> <var>r</var><sup>3</sup>, or by another messy integral.
+        But if you, unlike entrenched mathematicians, have any respect for physical reality, you have another way to find the volume of a sphere, or any other shape. 
+        Build the shape from dense material, submerge it in water, measure how high the water rose, and calculate the displaced volume.
+        For a more general formula, build and submerge the shape at several sizes, then do the requisite statistics.</p>
+        <img src="displace.png">
+        <p><small><a href="https://commons.wikimedia.org/wiki/File:Displacement-measurement.svg">Wikimedia Commons User:MikeRun, 2022, CC BY-SA 4.0</a></small></p>
+        <p>There is no good general method like that to measure areas.
+        The closest equivalent would be to paint the entire surface, and measure how much paint you used, being impractically careful to use a constant thickness of paint.
+        So it would be convenient to find surface area using volume.</p>
+        <p>Let's cut off a shell from around the sphere.
+        Say the shell is <var>a</var> units thick.</p>
+        <img src="shelled.svg">
+        <p>Since the shell is at the surface, it should relate to area, and since the shell has some thickness, it should relate to volume.</p>
+        <p>The shell is almost a sheet, so its volume is (almost) its area times its thickness, <var>A</var> <var>a</var>.
+        Since the inner sphere plus the shell make the original sphere, we have <var>V</var><sub>0</sub> + <var>A</var> <var>a</var> = <var>V</var>.
+        That is, we can treat the shell's volume as an increment upon the inner sphere's volume.</p>
+        <p>The inner sphere is scaled equally in every dimension from the original sphere.
+        So the inner sphere's volume is scaled cubically from the full sphere's volume, by <var>V</var><sub>0</sub> = <var>V</var> ((<var>r</var> - <var>a</var>) / <var>r</var>)<sup>3</sup> = <var>V</var> (1 - <var>a</var> / <var>r</var>)<sup>3</sup>.
+        That equation uses a ratio.</p>
+        <p>Combining the increment and the ratio, we have two equations for two unknowns, <var>V</var> and <var>V</var><sub>0</sub>, so we can solve for both:
+        <var>V</var> - <var>A</var> <var>a</var> = <var>V</var> (1 - <var>a</var> / <var>r</var>)<sup>3</sup>.
+        Expanding on the right, we have <var>V</var> - <var>A</var> <var>a</var> = <var>V</var> (1 - (3 <var>a</var>) / <var>r</var> + (3 <var>a</var>^2) / <var>r</var>^2 - <var>a</var>^3 / <var>r</var>^3).
+        But the increment equation gets more correct as the shell gets thinner as <var>a</var> approaches 0 as powers of <var>a</var> above linear become negligible, so we drop those terms:
+        <var>V</var> - <var>A</var> <var>a</var> = <var>V</var> (1 - (3 <var>a</var>) / <var>r</var>).</p>
+        <p>The rest is ordinary algebra.
+        Subtract <var>V</var> from both sides:
+        -<var>A</var> <var>a</var> = -(3 <var>a</var> <var>V</var>) / <var>r</var>.
+        Multiply by -1 / <var>a</var> on both sides:
+        <var>A</var> = (3 <var>V</var>) / <var>r</var>.
+        Plug in the known <var>V</var>:
+        <var>A</var> = (3 / <var>r</var>) (2/3) <var>τ</var> <var>r</var><sup>3</sup> = 2 <var>τ</var> <var>r</var><sup>2</sup>.
+        And lo, we have an area formula!</p>
+        <h2>Finding volume</h2>
+        <p>This increment-ratio method also works to find volume given area.
+        Let's find the volume of a cone.
+        To be specific, say it's a right circular cone (the usual kind) with radius <var>r</var> and height <var>h</var>.</p>
+        <img src="cone.svg">
+        <p>Let's cut off a slice from the bottom of the cone.
+        Say the slice is <var>a</var> units thick.</p>
+        <img src="sliced.svg">
+        <p>The unsliced remainder of the cone then has height <var>h</var> - <var>a</var>.
+        Its radius is less trivial.
+        As a scaled-down version of the original cone, this lesser cone's radius would be a scale factor times the original radius.
+        The scale factor is (<var>h</var> - <var>a</var>) / <var>h</var> = 1 - <var>a</var> / <var>h</var>, so the scaled radius is (1 - <var>a</var> / <var>h</var>) <var>r</var>.</p>
+        <p>A slice off the bottom is quite nearly a cylinder, with one end slightly wider than the other.
+        Here, the narrow end has the scaled radius (1 - <var>a</var> / <var>h</var>) <var>r</var>, and the wider end has the original radius <var>r</var>.
+        Roughly, its volume is that of a cylinder with a radius halfway between those:
+        (1/2) <var>τ</var> ((1 - <var>a</var> / (2 <var>h</var>)) <var>r</var>)<sup>2</sup> <var>a</var>.</p>
+        <img src="cylindered.svg">
+        <p>We can treat this cylinder-volume as an increment upon the unknown unsliced-cone-volume.</p>
+        <p>Since the lesser cone is scaled equally in every dimension from the original, its volume is also scaled cubically.
+        So we have a ratio (1 - <var>a</var> / <var>h</var>)<sup>3</sup> between their volumes.</p>
+        <p>With two unknowns (the unsliced cone's volume and the full cone's volume) and two equations (the increment relation and the ratio relation), we can solve for both.
+        The unsliced cone's volume is both <var>V</var> - (1/2) <var>τ</var> ((1 - <var>a</var> / (2 <var>h</var>)) <var>r</var>)<sup>2</sup> <var>a</var>, by the increment, and <var>V</var> (1 - <var>a</var> / <var>h</var>)<sup>3</sup>, by the ratio.
+        So <var>V</var> - (1/2) <var>τ</var> ((1 - <var>a</var> / (2 <var>h</var>)) <var>r</var>)<sup>2</sup> <var>a</var> = <var>V</var> (1 - <var>a</var> / <var>h</var>)<sup>3</sup>.</p>
+        <p>Expand both sides to find <var>V</var> - (1/2) <var>τ</var> (1 - <var>a</var> / <var>h</var> + <var>a</var><sup>2</sup> / (4 <var>h</var><sup>2</sup>)) <var>r</var><sup>2</sup> <var>a</var> = <var>V</var> (1 - (3 <var>a</var>) / <var>h</var> + (3 <var>a</var><sup>2</sup>) / <var>h</var><sup>2</sup> - <var>a</var><sup>3</sup> / <var>h</var><sup>3</sup>).
+        The equation gets more accurate as the cylinder better approximates the slice as the slice gets thinner as <var>a</var> approaches 0, so we can neglect powers above the linear of <var>a</var>.
+        All the terms with <var>a</var> in the left side's parens multiply with the <var>a</var> at the end to make terms quadratic or cubic on <var>a</var>.
+        Likewise, the last two terms in the right side's parens are powers of <var>a</var>.
+        So, with negligibly-small <var>a</var>, <var>V</var> - (1/2) <var>τ</var> <var>r</var><sup>2</sup> <var>a</var> = <var>V</var> (1 - (3 <var>a</var>) / <var>h</var>).</p>
+        <p>The rest is ordinary algebra.
+        Subtract <var>V</var> from both sides:
+        -(1/2) <var>τ</var> <var>r</var><sup>2</sup> <var>a</var> = -(3 <var>a</var> <var>V</var>) / <var>h</var>.
+        Multiply both sides by -<var>h</var> / <var>a</var>:
+        (1/2) <var>τ</var> <var>r</var><sup>2</sup> <var>h</var> = 3 <var>V</var>.
+        Divide both sides by 3:
+        <var>V</var> = (1/6) <var>τ</var> <var>r</var><sup>2</sup> <var>h</var>.
+        And lo, we have a volume formula!</p>
+        <footer><i>Updated 2026-07-13</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
