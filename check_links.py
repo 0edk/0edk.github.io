@@ -57,27 +57,35 @@ for filename in os.listdir():
     if filename.endswith(".html"):
         with open(filename, "r") as f:
             page_text = f.read()
-        full_header = H1_TITLE.sub("<h1>TITLE</h1>", HEAD_TITLE.sub(
-            "<title>TITLE</title>", PAGE_START.search(page_text).group(0)
-        ))
-        headers[full_header] += 1
+        raw_header = PAGE_START.search(page_text)
+        is_redirect = False
+        if raw_header:
+            full_header = H1_TITLE.sub("<h1>TITLE</h1>", HEAD_TITLE.sub(
+                "<title>TITLE</title>", raw_header.group(0)
+            ))
+            headers[full_header] += 1
+        elif "http-equiv=\"refresh\"" in page_text:
+            is_redirect = True
+        else:
+            print(f"no proper header in {filename}")
         head_title = HEAD_TITLE.search(page_text)
         if not head_title:
             print(f"no <title> in {filename}")
         h1_title = H1_TITLE.search(page_text)
-        if not h1_title:
+        if not h1_title and not is_redirect:
             print(f"no <h1> in {filename}")
         if head_title and h1_title:
             if head_title.group(1) == h1_title.group(1):
                 local_pages.add((filename, head_title.group(1)))
             else:
                 print(f"mismatched titles in {filename}")
-        full_footer: str = DATE_LIKE.sub("DATE", PAGE_END.search(
-            page_text
-        ).group(0))
-        footers[full_footer] += 1
+        if not is_redirect:
+            full_footer: str = DATE_LIKE.sub("DATE", PAGE_END.search(
+                page_text
+            ).group(0))
+            footers[full_footer] += 1
         footer = FOOTER.search(page_text)
-        if not footer:
+        if not footer and not is_redirect:
             print(f"no footer in {filename}")
         for pic in FULL_PIC_REF.finditer(page_text):
             attrs = pic.group(1)
