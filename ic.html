@@ -246,9 +246,79 @@ name:String = stdin@_; (name == "Steve")?{
         <p>The standard term is "identicon", and there are programs like this, but not for usernames-in-general as I propose, as far as I know.</p>
         <p>Around this point, several pages are filled to calculate square roots by hand to four decimal places.
         One must imagine the hapless fool unaware of the 21st century's ubiquitous calculators.</p>
+        <blockquote>Fundamentally acquired: <var>b</var><sup><var>x</var></sup>, log<sub><var>b</var></sub> <var>x</var>, <var>x</var> - <var>y</var>
+        <ol>
+            <li>0 = <var>x</var> - <var>x</var></li>
+            <li>dep [dependent on] 1, 1 = <var>b</var><sup>0</sup></li>
+            <li>dep 1, -<var>x</var> = 0 - <var>x</var></li>
+            <li>dep 3, <var>x</var> + <var>y</var> = <var>x</var> - (-<var>y</var>)</li>
+            <li>dep 4, <var>x</var>·<var>y</var> = <var>b</var><sup>(log<sub><var>b</var></sub> <var>x</var> + log<sub><var>b</var></sub> <var>y</var>)</sup></li>
+            <li><var>x</var> / <var>y</var> = <var>b</var><sup>(log<sub><var>b</var></sub> <var>x</var> - log<sub><var>b</var></sub> <var>y</var>)</sup></li>
+            <li>dep 5, <var>x</var><sup><var>y</var></sup> = <var>b</var><sup>(<var>y</var> · log<sub><var>b</var></sub> <var>x</var>)</sup></li>
+            <li>dep 1, 1 / <var>x</var> = <var>b</var><sup>(0 - log<sub><var>b</var></sub> <var>x</var>)</sup></li>
+        </ol></blockquote>
+        <p>The point here is that we can make any elementary function starting from just three binary operators.
+        That's like a less impressive version of <a href="https://arxiv.org/abs/2603.21852v2">Odrzywolek 2026's EML</a>, except that here, we need not assume any specific starting constants.</p>
+        <blockquote class="lyrics">The sinusoid formula's pi over two
+        Plus-minus pi-halves minus arc-sine
+        Of (<var>s</var> minus <var>v</var>), over <var>A</var>, all sub <var>p</var>
+        All over freq'ncy</blockquote>
+        <p>This is the formula <var>x</var> = (<var>π</var>/2 ± (<var>π</var>/2 - arcsin((<var>s</var> - <var>v</var>) / <var>A</var>)) - <var>p</var>) / <var>f</var>, which solves (inverts) <var>s</var> = <var>A</var> sin(<var>f</var> <var>x</var> + <var>p</var>) + <var>v</var>, a sinusoid of specific amplitude <var>A</var>, frequency <var>f</var> / <var>τ</var>, phase <var>p</var>, and vertical offset <var>v</var>.
+        The mnemonic follows a syllabically-rushed "Pop! Goes the Weasel" tune, closely inspired by <a href="https://www.youtube.com/watch?v=2lbABbfU6Zc">such a mnemonic for the quadratic formula</a>.</p>
+        <blockquote>
+<pre>#include &lt;stdio.h&gt;
+int main(int argc, char* argv[]) {
+    printf("P1\n%zu 7\n", strlen(argv[1]));
+    for (int row = -1; row &lt; 6; row++) {
+        printf("0");
+        for (size_t ch = 0; ch &lt; strlen(argv[1]); ch++) {
+            printf("%d", dotsies_pixel(argv[1][ch], row));
+        }
+        printf("0\n");
+    }
+}
+// [below is a shell session]
+$ yv a src/myn.c # [handwritten typo?]
+bash: yv: command not found
+$ mv a src/main.c
+$ gcc src/main.c -Wall
+$ ./a.exe not # [program writes to stdout, should redirect to not.pbm]
+$ magick convert not.pbm -scale 1000% not.png
+$ exit</pre>
+        </blockquote>
+        <p>The above program should draw the string in <code>argv[1]</code> as a <a href="https://www.omniglot.com/conscripts/dotsies.htm">Dotsies</a> <a href="https://en.wikipedia.org/wiki/Netpbm#File_formats">Portable BitMap</a> image.
+        It assumes a function <code>int dotsies_pixel(char c, int row);</code>, which one can write by inspection.</p>
+        <blockquote>[a game] in which the player has to pick constants to insert into parametric functions which control the movement of some "entities", with the goal of getting the entities' paths to intersect in a manner facilitating the transport of an object from a given starting point to a given ending point; the object is carried by the entities as they move and can be "ejected" (and transferred to another nearby entity, if there is one) as programmed by the puzzle designer and the player</blockquote>
+        <p>Only a pathological nerd would play that as-is.
+        Better perhaps to restyle "entities" as some kind of virtual vehicles.
+        "Pick constants" becomes "adjust routes that follow particular forms", and if two routes intersect, cargo passes from one vehicle to another.</p>
+        <blockquote><a href="https://en.wikipedia.org/wiki/RISC-V">R-I-S-C-hy-phen-V</a> / <a href="https://en.wikipedia.org/wiki/Respect_(song)">R-E-S-P-E-C-T (song)</a></blockquote>
+        <p class="lyrics">The ISA that's open/free
+        Was made in Berkeley, with <a href="https://en.wikipedia.org/wiki/David_Patterson_(computer_scientist)">Patterson</a>
+        (RISC, RISC, RISC, RISC)
+        Yeah, baby
+        (RISC, RISC, RISC, RISC)
+        <a href="https://www.sifive.com/">SiFive's</a> IPs
+        (RISC-V, just a two-core chip)
+        With Patterson, now
+        (just a two-core chip)</p>
+        <p class="lyrics">R-I-S-C-hy-phen-V
+        64-bit, still it's free
+        R-I-S-C-hy-phen-V
+        Fits in an SoC</p>
+        <blockquote>The process of FCCS [Fungibilising Cryptographic Cloud Storage] begins with a custom bootloader, which requests a username and "master password", which are used, respectively, to find-for-download and decrypt a cloud-stored and encrypted "core" partition.
+        This partition would contain passwords/keys for other systems [online services?] and a "directory" of other similarly-stored partitions, encrypted with different keys; these different keys would be available in the core partition.
+        The user would then download other partition-contents from the cloud as desired, possibly also including unencrypted public-content partitions (such as software installations [packages]) and possibly create new blank partitions.
+        The user uses the computer and, when done, sends any changes they want preserved as updated versions of their partitions back to the cloud.
+        The main planned usecases are communal personal computers and the handling of lifestyles that require switching computers, although the former raises security issues:
+        what if someone sneaks in a backdoor to steal encryption keys or whatnot?</blockquote>
+        <p>Ubiquitous modern web browsers implement something close to this dream with e.g. Google Drive.
+        But we might prefer to not depend on a single opaque, ethically sketchy company, and I know of no suitably open-standard, distributed alternative.</p>
+        <blockquote>make a shell/terminal-related program called "aplomb" (or some slight variation thereof) and combine it with <a href="https://alacritty.org/">the terminal emulator Alacritty</a>, so that one could say, for example, "i set up a Git repository with alacrity and aplomb" [which I saw as a common phrase]</blockquote>
+        <p>Around this point, the dates on entries and use of "color" and "colour" suggest I adopted British spelling around the start of 2021.</p>
         <hr>
         <p>Chaotic Ideas is long and confusing to read.
-        I will return to add more excerpts from the remaining 80 pages.<p>
-        <footer><i>Updated 2026-07-09</i> - <a href="index.html">homepage</a></footer>
+        I will return to add more excerpts from the remaining 40 pages.<p>
+        <footer><i>Updated 2026-07-29</i> - <a href="index.html">homepage</a></footer>
     </body>
 </html>
