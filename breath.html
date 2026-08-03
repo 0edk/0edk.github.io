@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Dell Latitude snores in piecewise blue</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>My Dell Latitude snores in triangular blue</h1>
+        <p>When a computer is in "sleep" mode, its power light might take on a state between the usual off and on to show that.
+        On the Dell Latitude E6410 laptop, the power light continuously glows blue when the laptop is fully on, but smoothly cycles between off and on during sleep.
+        This is often called a "breathing" pattern, and I wanted to measure its exact trajectory.</p>
+        <ol>
+            <li>Sleep the Latitude.</li>
+            <li>Darken the room as much as you can.</li>
+            <li>Hold a camera (like your phone) against the larger of the two breathing power lights, to take a video <code>light.mp4</code></li>            
+            <li>Extract a timestamp and average brightness for each frame with <a href="https://ffmpeg.org/">ffmpeg</a>:
+                <details><summary><pre>ffmpeg -i light.mp4 -vf 'signalstats,metadata=print:file=stats.txt' -f null -</pre></summary>
+                    <code>-i light.mp4</code> makes <code>light.mp4</code> the input file.
+                    <code>signalstats</code> is a "filter" (<code>-vf</code>) that takes statistics of the image for each frame, which will include a very useful YAVG.
+                    <code>metadata=print</code> is another "filter" that shows all metadata for each frame, which will include a very useful pts_time.
+                    <code>file=stats.txt</code> sends the statistics and metadata to <code>stats.txt</code>.
+                    <code>-f null -</code> confirms that this command shouldn't convert <code>light.mp4</code> into another video, but just give us the text file.</details></li>
+            <li>Start Python, so you can make a scatter-plot:
+                <pre>from matplotlib import pyplot as plt</pre></li>
+            <li>Load timestamps and brightnesses into Python:
+<pre>times: list[float] = []
+brights: list[float] = []
+current_time: float = 0.0
+with open("stats.txt", "r") as f:
+    for line in f:
+        if "time" in line:
+            current_time = float(line.strip().split(":")[-1])
+        elif "YAVG" in line:
+            times.append(current_time)
+            brights.append(float(line.strip().split("=")[-1]))</pre></li>
+            <li>You took the video in slow motion.
+                See how the light flickers.
+                This is noise.
+                Smooth it:
+<pre>WINDOW: int = 10
+brights = [sum(brights[i:i + WINDOW]) / WINDOW
+    for i in range(0, len(brights), WINDOW)]
+times = times[::WINDOW]</pre>
+                Exercise for the reader: do it more concisely with <a href="https://numpy.org/">NumPy</a>.</li>
+            <li>You took the video in slow motion.
+                Video time is not real time.
+                Scale it:
+                <pre>times = [t / 4 for t in times]</pre></li>
+            <li>Actually plot it:
+<pre>plt.scatter(times, brights)
+plt.savefig("brights.png")</pre></li>
+        </ol>
+        <img src="brights.svg" alt="scatter-plot of YAVG wrt pts_time from 0 s to 13 s, mostly continuous-piecewise-affine, with varied spacing between points and some kinks in the lines, showing just over three periods">
+        <p>This looks like a bottom-clipped triangle wave.
+        Heavily eyeballed, the period is 4.28 s, and the amplitude is 29 units of Y.</p>
+<pre>triangle_x = [-1.05 + 2.14 * i for i in range(8)]
+triangle_y = [12, 41] * 4
+plt.plot(triangle_x, triangle_y, c="red")</pre>
+        <img src="triangles.svg" alt="scatter-plot of YAVG wrt pts_time, with a fitted triangle wave overlaid, which deviates mostly at the trough of each period">
+        <footer><i>Updated 2026-08-03</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
