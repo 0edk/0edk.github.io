@@ -170,7 +170,7 @@ fn main() {
             <li>IRC use in what looks like irssi</li>
             <li>customised status bar</li>
         </ul>
-        <p>The keyboard is shown in the <a href="https://workmanlayout.org/">Workman layout</a>, which I used for a year or two before I settled on Dvorak.
+        <p>The keyboard is shown in the <a href="https://workmanlayout.org/">Workman layout</a>, which I used for a year or two (starting 2021-04-20) before I settled on Dvorak.
         What could "lazop" possibly refer to, you ask?</p>
         <blockquote>2021-05-22: Design principles of the previously-introduced [but on a later page] operator-oriented programming language ...
             <ul>
@@ -246,6 +246,8 @@ name:String = stdin@_; (name == "Steve")?{
         <p>The standard term is "identicon", and there are programs like this, but not for usernames-in-general as I propose, as far as I know.</p>
         <p>Around this point, several pages are filled to calculate square roots by hand to four decimal places.
         One must imagine the hapless fool unaware of the 21st century's ubiquitous calculators.</p>
+        <img src="basket.jpg" alt="crudely-drawn sneaker labelled &quot;ceci n'est pas une basket&quot;">
+        <p>"This is not a sneaker", a snowclone of <cite>The Treachery of Images</cite> (Magritte, 1929).</p>
         <blockquote>Fundamentally acquired: <var>b</var><sup><var>x</var></sup>, log<sub><var>b</var></sub> <var>x</var>, <var>x</var> - <var>y</var>
         <ol>
             <li>0 = <var>x</var> - <var>x</var></li>
@@ -316,9 +318,102 @@ $ exit</pre>
         But we might prefer to not depend on a single opaque, ethically sketchy company, and I know of no suitably open-standard, distributed alternative.</p>
         <blockquote>make a shell/terminal-related program called "aplomb" (or some slight variation thereof) and combine it with <a href="https://alacritty.org/">the terminal emulator Alacritty</a>, so that one could say, for example, "i set up a Git repository with alacrity and aplomb" [which I saw as a common phrase]</blockquote>
         <p>Around this point, the dates on entries and use of "color" and "colour" suggest I adopted British spelling around the start of 2021.</p>
-        <hr>
-        <p>Chaotic Ideas is long and confusing to read.
-        I will return to add more excerpts from the remaining 40 pages.<p>
-        <footer><i>Updated 2026-07-29</i> - <a href="index.html">homepage</a></footer>
+        <blockquote>One could even associate a sound with each user [in place of profile pictures/identicons]</blockquote>
+        <img src="wunderlich.jpg" alt="single connected rectilinear path, kinked in many places to hit each point of a 9-by-9 grid, starting from the lower left and meandering right-up-left-up-right-down to the lower right">
+        <p>That's iteration 2 of a space-filling fractal I invented.
+        Turns out that's already known as (the reflection of) the <a href="https://www.robertdickau.com/wunderlich.html">Wunderlich curve</a> of the third type.</p>
+        <blockquote><ul>
+            <li><code>:x</code> = program jump marker</li>
+            <li><code>^x</code> = unconditional jump</li>
+            <li><code>/x</code> = swap with immediate successor</li>
+            <li><code>+x</code> = add immediate successor</li>
+            <li><code>,x</code> = receive and save input</li>
+            <li><code>&amp;x</code> = bitwise-and with imm. succ.</li>
+            <li><code>;x</code> = initialise variable (to zero)</li>
+            <li><code>?x</code> = skip next instruction iff value is negative</li>
+            <li><code>#x</code> = copy to immediate successor</li>
+            <li><code>-x</code> = subtract immediate successor</li>
+            <li><code>.x</code> = send output</li>
+            <li><code>~x</code> = bitwise not</li>
+        </ul>
+        <table>
+            <tr><th>[normal language]</th><th>[this esolang]</th></tr>
+            <tr><td><code>a + b</code></td><td><code>,a,b+a.a</code></td></tr>
+            <tr><td><code>a * b</code></td><td><code>;c;d~d-c;b/b,d,a-a:s+c-a?a^s.c</code></td></tr>
+        </table></blockquote>
+        <p>I infer that this describes an <a href="https://esolangs.org/wiki/Main_Page">esoteric programming language</a> in which programs hold a sequence of command-index pairs, likely inspired by <a href="https://esolangs.org/wiki/Brainfuck">brainf</a> and, if the Urbit logo in the corner of the page is any indication, <a href="https://esolangs.org/wiki/nock">Urbit's Nock</a>.
+        The program would operate on a list of numeric memory cells, numbered <code>a</code>, <code>b</code>, etc, and step thru instructions to modify them.</p>
+        <p>To my surprise, the code given to multiply two numbers works correctly verbatim.
+        I translated it naively to C to test that:</p>
+<pre>int main(void) {
+    int c = 0;
+    int d = 0;
+    d = ~d;
+    c -= d;
+    int b = 0;
+    int t = b;
+    b = c;
+    c = t;
+    d = 83;
+    int a = 87;
+    a -= b;
+s:
+    c += d;
+    a -= b;
+    if (a &gt;= 0)
+        goto s;
+    printf("%d\n", c);
+}</pre>
+        <blockquote>a deep Markov chain which [sic?], instead of correlating output items to sequences of input items, would make a separate set of input-output correlations for each relative input position, and combines these correlative probabilities (in a customisable way) during generation [inference].
+        This may be called an "intersective Markov chain", because the condition of a string's presence is the <em>intersection</em> of all its characters' presence conditions.</blockquote>
+        <p>The "typical Markov chain" I mentioned here looks at several characters to infer the next one, according to its order.
+        Let's say that order is 3.
+        In the training step, you look at "sleeplessness" and record: sle → e, lee → p, eep → l, epl → e, ple → s, etc.
+        In inference, you could start the chain with "les" and get just "less" or "lessness".
+        Then you try it on "ele", and get nothing, because "ele" never showed up in the training data.</p>
+        <p>To train an intersective Markov chain of order 3, you instead record: s.. → e, l. → e, e → e, l.. → p, e. → p, e → p, etc.
+        In inference, you could start the chain with "les" and get "less" or "lessness".
+        Then you try it on "ele", and get "eleepless" or "eleeplessness" or "eleesleepless" or "eleesless", etc.</p>
+        <blockquote><ul>
+            <li>remove sexual desires</li>
+            <li>fix myopia, or perhaps replace eyes with something entirely different and better</li>
+            <li>get rid of hair; return to <del>monke</del> bald</li>
+            <li>expand the umwelt [range/variety of perception] by sending data into the body through the sense of touch on unexploited surfaces (e.g. torso, upper arms), perhaps to form a "third ear"</li>
+            <li>enable real-time adjustment of the perceived "strength" of senses, especially hearing, pain, and smell, including the ability to temporarily wholly disable senses</li>
+            <li>extend the hands with extra fingers or non-finger components</li>
+        </ul></blockquote>
+        <blockquote>slideshows, but the slide ordering is generalised to a directed graph rather than a bidirectional chain</blockquote>
+        <blockquote>the Real-Time IDE.
+        Would be used for languages/contexts (like sed scripts) that have very quickly-running programs that clearly map from inputs to outputs.
+        In it, one selects input files, then edits the program; as they edit, output previews are updated with very frequent intervals.</blockquote>
+        <p>Some of these Real-Time IDEs already exist, such as <a href="https://www.lark-parser.org/ide/">for the Lark parsing library</a>.
+        The TUI program <a href="https://junegunn.github.io/fzf/">fzf</a> works likewise, but the "program" is a string filter.</p>
+        <p>A helpful feature, novel to those examples and to past-me's concept: as the user works out a program, save intermediate versions and the outputs they produced.
+        This might happen automatically at every syntatically-valid version of the program, or only as an explicit user action.
+        Either way, it'd let you switch between versions, to iterate more fluidly than with a naive Ctrl+Z.</p>
+        <img src="dipikewia.jpg" alt="Expanding Brain meme: Wikipedia for a tiny brain, Pikiwedia for an average brain, Kiwidepia for a strong brain, Dipikewia for an extraordinary brain">
+        <p>Above meme redrawn from a sketch in the notebook.</p>
+        <blockquote>instead of storing user-related permissions data with each file, use a list of accessible files with each process.
+        Each forked processes' file access must be a subset of its parent's.
+        Each user's "root process" may have its permissions derived from a "traditional" system.</blockquote>
+        <p>OpenBSD's <a href="https://man.openbsd.org/unveil">unveil(2) syscall</a> partly implements this.
+        Past-me's concept assumes that child process inherit the unveil-list (<a href="https://github.com/openbsd/src/blob/master/sys/sys/proc.h#L224"><code>ps_uvpaths</code></a>), which does happen with fork(2), but only sometimes with the following execve(2).
+        See also <a href="https://lwn.net/Articles/767428/">karkhaz et al on LWN, 2018</a>.</p>
+        <p>A paraphrased design for a text-based notes repository:</p>
+        <ul>
+            <li>Each note is a Markdown (or <a href="https://geminiprotocol.net/docs/gemtext.gmi">gemtext</a>) file, named according to its creation timestamp.</li>
+            <li>The first line of each file must be a heading.</li>
+            <li>Any headings after the first line in a file must be lesser than the first-line heading.
+            Thus if a line has a heading prefix of the right order (such as "## "), we can assume it's the start of a note.</li>
+            <li>The first line of a note would hold a creation timestamp and a list of tags.
+            Thus if a first-line heading is found out of context, we can assume it belongs to the file matching the timestamp it contains.</li>
+            <li>A text editor would hold several complete notes in the buffer at a time.
+            When the user "saves the file", the editor uses headings to split the buffer into notes and save them to their respective files, making new files as needed.</li>
+            <li>Each tag present in headings implies a corresponding <code>tagcache</code> file, regularly updated.
+            A <code>tagcache</code> naively lists headings of notes that contain a given tag.
+            Thus the user can seek notes by their tags, and in the results get the timestamps that identify files.</li>
+        </ul>
+        <p>I expect(ed) this design is easy to implement, which motivates its quirks.</p>
+        <footer><i>Updated 2026-08-06</i> - <a href="index.html">homepage</a></footer>
     </body>
 </html>

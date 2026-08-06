@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Every symbol in several programming languages</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Every symbol in several programming languages</h1>
+        <p>Our basic character set, ASCII, has 95 visible characters, which include 52 letters, 10 digits, and space.
+        In most programming languages, those respectively form identifiers (variable names and the like), numeric literals, and separations between tokens.
+        The 32 other characters may be called symbols, and their meanings are more varied.</p>
+        <p>The table below briefly describes how each symbol is used in each of several major programming languages.
+        Some symbols are used in bound forms with one or more other characters; these uses are also listed under each character in such forms.
+        Languages are ordered by <a href="https://www.tiobe.com/tiobe-index/">popularity on the TIOBE Index</a>.
+        You can make educated guesses for languages not listed based on which others they're similar to: C++ is much like C, C# much like Java, etc.</p>
+        <table>
+_ Python C Java JavaScript SQL Rust Go MATLAB Lua Haskell
+! unequal not/unequal not/unequal not/unequal unequal not/unequal/macro not/unequal command unused <ahref="https://stackoverflow.com/questions/993112/what-does-the-exclamation-mark-mean-in-a-haskell-declaration">strict</a>
+" string string string string <ahref="https://sqlite.org/quirks.html#double_quoted_string_literals_are_accepted">identifier</a> string string string string string
+# comment preprocessor unused <ahref="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_elements">private</a> <ahref="https://dev.mysql.com/doc/refman/5.7/en/comments.html">comment</a>/<ahref="https://learn.microsoft.com/en-us/sql/t-sql/statements/create-table-transact-sql">temporary</a> string/<ahref="https://doc.rust-lang.org/reference/attributes.html">attribute</a> unused unused length <ahref="https://mail.haskell.org/pipermail/beginners/2012-October/010848.html">magic</a>
+$ unused unused identifier identifier <ahref="https://www.postgresql.org/docs/8.1/sql-syntax.html">myriad</a> <ahref="https://doc.rust-lang.org/reference/macros-by-example.html">macro</a> unused unused unused application
+% modulo modulo modulo modulo modulo modulo modulo comment modulo <ahref="https://hackage-content.haskell.org/package/base-4.22.0.0/docs/Data-Ratio.html#v:-37-">ratio</a>
+&amp; and and/address and and and and/address and/address and/<ahref="https://www.mathworks.com/help/matlab/matlab_oop/subclass-syntax.html">subclass</a> and unused
+' string char char string string char/lifetime char char-array string char
+( group/call group/call/cast group/call/cast group/call group/call/cast/tuple group/call/tuple group/call/cast group/call/index group/call group/tuple
+) symmetricwith(
+* multiply/power/all multiply/pointer/comment multiply/all/comment multiply/power/comment/<ahref="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">generator</a> multiply/all/comment multiply/pointer/comment multiply/pointer/comment multiply multiply multiply
++ add add/increment add/increment add/increment add add add/increment add add add/concat
+, arguments/list arguments/list arguments/list arguments/list list arguments/list ...
+- subtract/<ahref="https://docs.python.org/3/reference/compound_stmts.html#function-definitions">return</a> subtract/decrement/member subtract/decrement/lambda subtract/decrement subtract/comment subtract/return subtract/decrement subtract subtract subtract/comment/lambda/return/assign
+. member/decimal/ellipsis member/decimal/ellipsis member/decimal/ellipsis member/decimal/ellipsis member/decimal member/decimal/range/spread member/decimal/ellipsis member/decimal/continue/element-wise member/decimal/ellipsis/concat decimal/range/compose
+/ divide divide/comment divide/comment divide/comment/regexp divide/comment divide/comment divide/comment divide divide divide/unequal
+: block/pair/type/<ahref="https://docs.python.org/3/reference/expressions.html#assignment-expressions">assign</a> label/ternary ternary/loop label/ternary <ahref="https://www.postgresql.org/docs/8.1/sql-syntax.html#SQL-SYNTAX-CONSTANTS">myr</a><ahref="https://docs.databricks.com/aws/en/sql/language-manual/functions/colonsign">iad</a> type/member pair/label/assign range member pair/type
+; separator statement statement statement statement statement loop row/silence statement/list structural
+&lt;
+=
+&gt;
+?
+@
+[
+\
+]
+^
+_
+`
+{
+|
+}
+~
+        <footer><i>Updated 2026-07-27</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
