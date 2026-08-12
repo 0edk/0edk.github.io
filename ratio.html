@@ -82,6 +82,26 @@
         Divide both sides by 3:
         <var>V</var> = (1/6) <var>τ</var> <var>r</var><sup>2</sup> <var>h</var>.
         And lo, we have a volume formula!</p>
-        <footer><i>Updated 2026-07-13</i> - <a href="index.html">homepage</a></footer>
+        <h2>A less obvious case</h2>
+        <p>How much material does it take to glaze a donut?</p>
+        <p>An idealised donut is a geometric torus.</p>
+        <img src="toughrus.jpg" alt="photographed donut with a translucent abstract perfect torus superimposed on it to accentuate the shape">
+        <p><small><a href="https://commons.wikimedia.org/wiki/File:Glazed-Donut.jpg">Evan Amos, 2010, public domain</a> and <a href="https://commons.wikimedia.org/wiki/File:Tesseract_torus.png">Tilman Piesk, 2021, CC BY 4.0</a></small></p>
+        <p>A torus has a major radius, call it <var>R</var>, and a minor radius or -half-thickness, call it <var>r</var>.</p>
+        <img src="toradius.svg" alt="R is the radius of the circle from which the torus is inflated, and r is the radius of the cross-section of such an inflation" width="400">
+        <p>You can find the volume of a torus physically, as above.
+        A relatively simple triple integral would also do it, inasmuch as such a thing can exist.
+        The donut's glaze follows its area, which we can calculate from volume with our new trick.</p>
+        <p>For the sphere and the cone, we scaled a modified shape along every dimension.
+        However, the torus shrinks back from its surface by scaling along its minor radius.</p>
+        <img src="ecafrus.gif" alt="shrinking a torus just along r suffices to move the surface uniformly orthogonal from where it started" width="600">
+        <p>Locally, a torus thus shrunk is scaled from the original along two dimensions.
+        In cross-section, it goes from two circles each of radius <var>r</var> to two circles each of radius <var>r</var> - <var>a</var>.
+        Thus the volume scales by the ratio <var>V</var><sub>0</sub> = <var>V</var> ((<var>r</var> - <var>a</var>)<sup>2</sup> / <var>r</var><sup>2</sup>).</p>
+        <p>The increment here is just the surface scaled by the thickness removed: <var>V</var> = <var>V</var><sub>0</sub> + <var>A</var> <var>a</var>.</p>
+        <p>Solving, we find <var>V</var> - <var>A</var> <var>a</var> = <var>V</var> ((<var>r</var> - <var>a</var>)<sup>2</sup> / <var>r</var><sup>2</sup>), and then <var>A</var> = (<var>V</var> / <var>a</var>) (1 - (<var>r</var> - <var>a</var>)<sup>2</sup> / <var>r</var><sup>2</sup>).
+        Since powers of <var>a</var> become negligible, as before, the formula for <var>A</var> reduces to (<var>V</var> / <var>a</var>) ((2 <var>a</var>) / <var>r</var>) and then (2 <var>V</var>) / <var>r</var>.</p>
+        <p>If you measured the volume of a torus to be (1/2) <var>τ</var><sup>2</sup> <var>R</var> <var>r</var><sup>2</sup>, you would conclude that its area is <var>τ</var><sup>2</sup> <var>R</var> <var>r</var>, which is correct.</p>
+        <footer><i>Updated 2026-08-11</i> - <a href="index.html">homepage</a></footer>
     </body>
 </html>
