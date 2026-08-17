@@ -18,6 +18,12 @@ blockquote {
 .lyrics {
     white-space: pre-line;
 }
+.paper {
+    filter: inherit contrast(200%);
+}
+.dust {
+    width: 75%;
+}
 @media (prefers-color-scheme: dark) {
     body {
         background-color: black;
@@ -34,5 +40,11 @@ blockquote {
     }
     img {
         filter: invert();
+    }
+    .paper {
+        filter: invert() contrast(200%);
+    }
+    .photo, .dust {
+        filter: none;
     }
 }
