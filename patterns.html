@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Compression should, and mostly does, destroy patterns</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Compression should, and mostly does, destroy patterns</h1>
+        <p>Compression turns digital data into other, usually smaller, equivalent digital data.
+        It's "equivalent" in that you can convert the smaller data back to the original via an associated decompression.</p>
+        <p>The <a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">exact</a> <a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch">methods</a> <a href="https://en.wikipedia.org/wiki/Huffman_coding">of</a> <a href="https://en.wikipedia.org/wiki/Zstd">compression</a> <a href="https://en.wikipedia.org/wiki/LZMA">are</a> <a href="https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform">diverse</a> <a href="https://en.wikipedia.org/wiki/Run-length_encoding">and</a> <a href="https://en.wikipedia.org/wiki/Arithmetic_coding">elaborate</a>, but they all somehow find patterns in uncompressed data, and take those patterns as opportunities to abbreviate the data.
+        So long as patterns exist in a file, easy enough to describe and repetitious enough to exploit, there will exist a more concise way to express that file.
+        The ideal compressor would leave no clear patterns in its output.</p>
+        <p><a href="https://inside.battelle.org/blog-details/battelle-publishes-open-source-binary-visualization-tool">Battelle's CantorDust program</a> gives us a neat way to see the character of an arbitrary file.
+        Since the program applies equally well to an original file or a compressed version, we can get a visual intuition for what a compression algorithm does to a file.</p>
+        <p>My computer has a 1.2 MB ELF executable at <code>/bin/bash</code>, which my CantorDust clone shows as follows:</p>
+        <img width="512" src="bashelf.png" alt="greyscale density-scatterplot of byte-pairs in the /bin/bash ELF">
+        <p>We see rough squares across the ASCII capital and lowercase letters, dull stripes on the left and right, and numerous vertical and horizontal lines, some solid, most dotted.
+        Except for the letter blocks, those are typical features of x86-64 machine code.
+        On the one hand, this lets us infer what kind of file we're looking at, even when <a href="https://darwinsys.com/file/">the Magical <code>file</code> program</a> fails.
+        On the other hand, these are patterns which imply inefficiency.</p>
+        <p><a href="https://www.gnu.org/software/gzip/">gzip</a> is a common compressor on Unix-based systems, of <code>.tar.gz</code> fame.
+        After gzip level 1 of 9, <code>/bin/bash</code> looks like this:</p>
+        <img width="512" src="bashgz1.png" alt="greyscale noise, mostly">
+        <p>The picture looks more like white noise.
+        Trends are less distinctive, but there's more white in the lower right, and more black in the upper left, with faint lines at every eighth subdivision, vertically and horizontally.
+        If we turn it up to level 9, it gets just a tad more uniform:</p>
+        <img width="512" src="bashgz9.png" alt="greyscale noise, mostly">
+        <p><a href="https://infozip.sourceforge.net/Zip.html">ZIP</a> is the more common compressor for Windows.
+        How well does default ZIP do at level 1?</p>
+        <img width="512" src="bashzip1.png" alt="greyscale noise, mostly">
+        <p>It looks a lot like gzip.
+        This makes sense, as gzip and ZIP both use an algorithm called DEFLATE.</p>
+        <p><a href="https://sourceware.org/bzip2/">bzip2</a> is another common compression format, which likewise has levels 1 thru 9.
+        Already at level 1, vertical and horizontal lines are much fainter than from DEFLATE, but we see some diagonal lines:<p>
+        <img width="512" src="bashbz21.png" alt="greyscale noise, mostly">
+        <p>Level 9 blurs away some of those lines:</p>
+        <img width="512" src="bashbz29.png" alt="greyscale noise, mostly">
+        <p><a href="https://tukaani.org/xz/">xz</a> is <a href="https://kernel.org/">good enough for the Linux source code</a>.
+        It's also good enough for a smooth CantorDust visual:</p>
+        <img width="512" src="bashxz9.png" alt="greyscale noise">
+        <p>That's level 9.
+        xz level 0 is almost as noisy.</p>
+        <p>What about <a href="https://facebook.github.io/zstd/">zstd</a>?</p>
+        <img width="512" src="bashzstd1.png" alt="greyscale noise, mostly">
+        <p>Lots of faint lines and stripes.
+        Turn it up to level 19, and all that fades to noise:</p>
+        <img width="512" src="bashzstd19.png" alt="greyscale noise">
+        <p>What about <a href="https://brotli.org/">brotli</a>?
+        A lot like zstd.</p>
+        <img width="512" src="bashbr0.png" alt="greyscale noise, mostly">
+        <img width="512" src="bashbr9.png" alt="greyscale noise">
+        <footer><i>Updated 2026-08-17</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
