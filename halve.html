@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dyadic recursive mean-range transform</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Dyadic recursive mean-range transform</h1>
+        <p>I write up this piece of maths now, for if I did not, I would remain obsessed for the next week and go mad.</p>
+        <h2>Motivation</h2>
+        <p><a href="https://gist.github.com/0edk/16d192baee3e60ceadb07ac613ad0e03">I cloned Battelle's CantorDust program</a> for <a href="patterns.html">a study on file compression</a>.
+        CantorDust and my clone classify each byte in their input into one of 65536 bins, then plot the sizes of those bins as a grid.
+        This means CantorDust must pick a brightness, conventionally 0 to 255, to depict how many bytes fit into each bin.
+        To the mathematician, that entails a monotonic function from arbitrary nonnegative integers to integers in the range 0 to 255.
+        That still leaves many options.</p>
+        <p>The most naive such function is the linear <code>n * 255 / (max - min)</code>.
+        If the most full bin has 1000 items, and most others are empty or have up to 10 items each, then that fullest bin shows as the brightest possible 255, and the rest of the image remains very dark.
+        That makes it hard to distinguish between the great majority of the bins.</p>
+        <p>Slightly cleverer is a logarithmic map, something like <code>log(n || 1) * 255 / log(max / (min || 1))</code>.
+        In the same 1000-against-10 example, the fullest bin is still the brightest possible, while the others would map to the range from 0 to 85.
+        For most cases, this is good enough.
+        Not always.</p>
+        <p>I went for a much cleverer method, contrary to Kernighan's classic advice.</p>
+        <blockquote>Debugging is twice as hard as writing a program in the first place.
+        So if you're as clever as you can be when you write it, how will you ever debug it?</blockquote>
+        <p>In this case, I did debug my <code>pgmdust.c</code> just fine.
+        But I remain thoroughly confused about the theory beyond it.</p>
+        <h2>Discrete case</h2>
+        <p>Another brightness map would take the mean size of all bins, then assign 255 (white) to bins larger than that mean size, and 0 (black) to bins smaller than that mean size.
+        In the example, the mean size of a bin would be somewhere from 1 to 10.
+        The outlier at 1000 would show as white, and so would some fair subset of the rest.
+        All the 0-bins and some of the smaller ones would show as black.</p>
+        <p>This dichotomy, literally black and white, is of course not nuanced enough.
+        But we can apply it recursively.
+        Among those bins that got assigned 0, take the mean and split again, to assign brightnesses 0 and 64 (dark grey).
+        Likewise, among those bins that got assigned 255, take the mean and split again, to assign brightnesses 128 (medium grey) and 192 (light grey).
+        Do it again for six more rounds.
+        Then each pixel in the output image will fit one of 256 bins of bin-size, monotonic to colours.</p>
+        <p>Inversely, we have a monotonic function from integers in the range 0 to 255 to intervals of reals, based on a discrete distribution of integers.
+        To compute that function, look at the input in binary, starting from the most significant bit.
+        At the start, the output is the entire range of the original distribution.
+        On a 0, reduce the output's upper bound to the mean of values in the distribution that fit the previous output range.
+        On a 1, reduce the output's lower bound to the same mean.</p>
+        <p>We may call this pattern a "dyadic recursive mean-range transform", a name that ChatGPT picked, for it's too novel for me to match to something already named.</p>
+        <p>My best tools of analysis work on continuous functions.
+        Let's reframe that function and take a limit.</p>
+        <h2>Continuous case</h2>
+        <p>The function we're studying takes its input as a bit-string.
+        It might as well get that bit-string as the binary expansion of a real number from 0 to 1, like the 0.01011110... of 1/<var>e</var>.
+        A real number's binary expansion goes forever, so to each input we get an infinite sequence of shrinking intervals.
+        From one interval in that sequence, take the mean of the distribution restricted to that interval, then cut the interval with that mean to get the next interval.
+        Which side to cut on follows from a bit consumed from the input number.
+        On well-behaved distributions, that sequence will converge around a single output number.</p>
+        <p>What exactly is a "distribution" here?
+        For the convenience of symmetry, let's use an input function mapping the interval 0 to 1 to arbitrary real numbers.
+        The <a href="https://mathworld.wolfram.com/DistributionFunction.html">CDF</a> is then the proportion of the input function's input that yields output less than the input to the CDF.
+        The PDF is the derivative of that.</p>
+        <p>For a monotonically increasing input function, its mean restricted to an interval of values is its integral from the input that yields one endpoint to that of the other endpoint, divided by their difference.
+        That is, the mean of <var>f</var>(<var>x</var>) restricted to values from <var>a</var> to <var>b</var> is (∫<sub><var>f</var><sup>-1</sup>(<var>a</var>)</sub><sup><var>f</var><sup>-1</sup>(<var>b</var>)</sup> <var>dx</var> <var>f</var>(<var>x</var>)) / (<var>f</var><sup>-1</sup>(<var>b</var>) - <var>f</var><sup>-1</sup>(<var>a</var>)).</p>
+        <h2>Easy examples</h2>
+        <p>Consider the input function <var>f</var>(<var>x</var>) = <var>k</var>, a constant.
+        When stepping thru bits of the transformed function's input, we start from the interval from minimum to maximum, which here is just the point <var>k</var>.
+        No later cuts can change that, so the transformed function is also a constant, <var>F</var>(<var>x</var>) = <var>k</var>.</p>
+        <p>Consider the affine input function <var>f</var>(<var>x</var>) = <var>m</var> <var>x</var> + <var>b</var>.
+        WLOG, suppose <var>m</var> &gt; 0 so that <var>f</var> increases monotonically.
+        The starting interval ranges from the minimum <var>f</var>(0) = <var>b</var> to the maximum <var>f</var>(1) = <var>m</var> + <var>b</var>.
+        The mean of <var>f</var> over that interval is the midpoint <var>m</var> / 2 + <var>b</var>.
+        Inputs less than 1/2 to <var>F</var> start with a 0 in binary, so they proceed on the interval from 0 to <var>m</var> / 2 + <var>b</var>.
+        Likewise, inputs at least 1/2 start with 1, so they proceed on the interval from <var>m</var> / 2 + <var>b</var> to <var>m</var> + <var>b</var>.
+        By thorough symmetry, we end up with <var>F</var>(<var>x</var>) = <var>m</var> <var>x</var> + <var>b</var> = <var>f</var>(<var>x</var>).</p>
+        <p>Consider a function scaled from another as <var>f</var>(<var>x</var>) = <var>k</var> <var>g</var>(<var>x</var>).
+        WLOG, suppose <var>k</var> &gt; 0.
+        Its starting interval ranges from the minimum, <var>k</var> times the minimum of <var>g</var>, to the maximum, <var>k</var> times the maximum of <var>g</var>.
+        The mean of <var>f</var> restricted to the output interval <var>a</var> to <var>b</var> is <var>k</var> times the mean of <var>g</var> restricted to the scaled output interval <var>a</var> / <var>k</var> to <var>b</var> / <var>k</var>.
+        By thorough symmetry, we end up with <var>F</var>(<var>x</var>) = <var>k</var> <var>G</var>(<var>x</var>), scaled from the transformed <var>g</var>.</p>
+        <p>I suspect that this transform commutes with addition, such that <var>h</var>(<var>x</var>) = <var>f</var>(<var>x</var>) + <var>g</var>(<var>x</var>) transforms to <var>H</var>(<var>x</var>) = <var>F</var>(<var>x</var>) + <var>G</var>(<var>x</var>).
+        If so, the transform would be linear, a convenient property.
+        But it's not obvious to me how to prove that.</p>
+        <h2>Quadratic</h2>
+        <p>Consider the input function <var>f</var>(<var>x</var>) = <var>x</var><sup>2</sup>.
+        Its starting interval ranges 0 to 1.
+        The mean across that initial range is <var>F</var>(1/2) = 1/3.
+        Unlike first-degree polynomials, the transform actually effects some change here, for <var>F</var>(1/2) ≠ 1/4 = <var>f</var>(1/2).
+        But what change exactly?</p>
+        <p>Since <var>f</var> increases monotonically, the lemma above applies so that <var>F</var>((<var>a</var> + <var>b</var>) / 2) = (∫<sub><var>u</var></sub><sup><var>v</var></sup> dx <var>f</var>(<var>x</var>)) / (<var>v</var> - <var>u</var>), where <var>a</var> and <var>b</var> are <a href="https://en.wikipedia.org/wiki/Dyadic_rational">of the form <var>p</var> / 2<sup><var>k</var></sup> and (<var>p</var> + 1) / 2<sup><var>k</var></sup></a> respectively, and <var>u</var> = <var>f</var><sup>-1</sup>(<var>F</var>(<var>a</var>)), <var>v</var> = <var>f</var><sup>-1</sup>(<var>F</var>(<var>b</var>)).
+        Plug in the particulars of f to get <var>F</var>((<var>a</var> + <var>b</var>) / 2) = (<var>F</var>(<var>b</var>)<sup>3/2</sup> - <var>F</var>(<var>a</var>)<sup>3/2</sup>) / (3 (<var>F</var>(<var>b</var>)<sup>1/2</sup> - <var>F</var>(<var>a</var>)<sup>1/2</sup>)).</p>
+        <p>That doesn't make for an obvious closed form, but we can compute it with a program.</p>
+        <img src="quadlog.png" alt="two functions very close together both start horizontal at (0, 0) and curve gradually upward right to reach (1, 1)">
+        <p>I plotted <var>F</var>(<var>x</var>) in blue, and a simple closed-form approximation in orange over it.
+        You'll hardly see any of the former there, because the approximation is very close.</p>
+        <p>What is that approximation?
+        This <var>F</var> monotonically increases from (0, 0) to (1, 1).
+        If a function does that, we may guess it's a power function.
+        From that ansatz <var><var>x</var></var><sup><var>p</var></sup>, fit it to the example <var>F</var>(1/2) = 1/3.
+        We find 2<sup>-<var>p</var></sup> = 1/3, so <var>p</var> = log<sub>2</sub>(3), i.e. <var>F</var>(<var>x</var>) ~ <var>x</var><sup>log<sub>2</sub>(3)</sup>.</p>
+        <p>I find it strange for something so simple to fit so closely yet not exactly.</p>
+        <img src="approx.png" alt="Normal Zones of approximations include anything exact, whatever the complexity, or complex close approximations, or simple crude approximations, while xkcd 1047, somewhat strangely, shows medium-complexity close approximations, and this x^(log2(3)), very strangely, is a simple close approximation">
+        <p>The residuals are nondifferentiable and all positive, except at reciprocal powers of two, where the approximation nails it.</p>
+        <img src="residuals.png" alt="residual hump from x = 0.5 to 1.0, peak absolute residual 0.0031, with the same shape scaled down from x = 0.25 to 0.5, x = 0.125 to 0.25, etc towards (0, 0)">
+        <p>It looks to me something like <var>k</var> <var>x</var><sup>log<sub>2</sub>(3)</sup> |sin((<var>τ</var>/2) log<sub>2</sub>(<var>x</var>))|, but I didn't find such a correction to work.</p>
+        <p>To see the issue more clearly, calculate the derivative.
+        It's discontinuous, in blue, at every reciprocal power of two.</p>
+        <img src="discont.png" alt="smooth function starts near-vertical at (0, 0) to curve flatter towards (1, 1.6), while another function, closely following it, is a jagged sequence of smooth segments">
+        <h2>Further functions</h2>
+        <p>With <var>f</var>(<var>x</var>) = <var>x</var><sup><var>k</var></sup>, we get <var>F</var>(1/2) = ∫<sub>0</sub><sup>1</sup> <var>dx</var> <var>x</var><sup><var>k</var></sup> = 1 / (<var>k</var> + 1).
+        Assume a power function for <var>F</var>, as with the quadratic, and get the general approximation <var>x</var><sup>log<sub>2</sub>(<var>k</var> + 1)</sup>.
+        In each case, there remain small residuals of a similar shape.</p>
+        <p>The exponential f(x) = e<sup>x</sup> becomes something that curves a tad above e<sup>x</sup>, yet shares its endpoints.</p>
+        <img src="expdiff.png" alt="two functions curve from (0, 1) to (1, e = 2.72), one slightly above the other">
+        <p>Split e<sup>x</sup> along its power series, transform from there by linearity, and you get the strange but much closer function <code>sum(x ** math.log2(i + 1) / math.factorial(i) for i in range(10))</code>.</p>
+        <img src="expgood.png" alt="two functions curve from (0, 1) to (1, e), very close together, and which one is greater flips when crossing x = 0.5">
+        <p>The logarithm f(x) = ln(x) becomes very close to F(x) = log<sub>2</sub>(x), with nondifferentiable residuals as above.</p>
+        <img src="lngap.png" alt="residual hump from x = 0.5 to 1, peak absolute residual -0.0032, with the same shape at the same height squeezed narrower from x = 0.25 to 0.5, x = 0.125 to 0.25, etc towards x = 0">
+        <footer><i>Updated 2026-08-24</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
