@@ -27,8 +27,15 @@ function u(a) {
 document.getElementsByClassName("boc")[1].onclick = ev => {
     const c = u('$"x*`53.G81PSh{G') + "r" + u("{%%'<-Q781]:N");
     const l = document.getElementsByClassName("boc")[0]
-    if (!l.textContent.includes("@")) {
-        l.textContent += " at " + c.split(":")[1];
+    let a;
+    if (l.textContent.includes("@")) {
+        a = l.children[0];
+    } else {
+        l.append(" at ");
+        a = document.createElement("a");
+        a.href = c;
+        a.textContent = c.split(":")[1];
+        l.append(a);
     }
-    window.open(c);
+    a.click();
 }
