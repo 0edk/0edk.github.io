@@ -87,7 +87,7 @@
         But what change exactly?</p>
         <p>Since <var>f</var> increases monotonically, the lemma above applies so that <var>F</var>((<var>a</var> + <var>b</var>) / 2) = (∫<sub><var>u</var></sub><sup><var>v</var></sup> dx <var>f</var>(<var>x</var>)) / (<var>v</var> - <var>u</var>), where <var>a</var> and <var>b</var> are <a href="https://en.wikipedia.org/wiki/Dyadic_rational">of the form <var>p</var> / 2<sup><var>k</var></sup> and (<var>p</var> + 1) / 2<sup><var>k</var></sup></a> respectively, and <var>u</var> = <var>f</var><sup>-1</sup>(<var>F</var>(<var>a</var>)), <var>v</var> = <var>f</var><sup>-1</sup>(<var>F</var>(<var>b</var>)).
         Plug in the particulars of f to get <var>F</var>((<var>a</var> + <var>b</var>) / 2) = (<var>F</var>(<var>b</var>)<sup>3/2</sup> - <var>F</var>(<var>a</var>)<sup>3/2</sup>) / (3 (<var>F</var>(<var>b</var>)<sup>1/2</sup> - <var>F</var>(<var>a</var>)<sup>1/2</sup>)).</p>
-        <p>That doesn't make for an obvious closed form, but we can compute it with a program.</p>
+        <p>That doesn't make for an obvious closed form, but we can <a href="https://gist.github.com/0edk/87cc2eec745aea626c1090a34f6240b1">compute it with a program</a>.</p>
         <img src="quadlog.png" alt="two functions very close together both start horizontal at (0, 0) and curve gradually upward right to reach (1, 1)">
         <p>I plotted <var>F</var>(<var>x</var>) in blue, and a simple closed-form approximation in orange over it.
         You'll hardly see any of the former there, because the approximation is very close.</p>
