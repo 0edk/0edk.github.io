@@ -52,15 +52,14 @@ void main() {
         <p>To turn on the feature temporarily, run <code>hyprctl eval "hl.config({ decoration = { screen_shader = '$HOME/.config/hypr/bw.frag' } })"</code> and replace the path with <code>''</code> to turn it off.</p>
         <h2>Android</h2>
         <p>To configure Android deeply, you need to <a href="https://en.wikipedia.org/wiki/Rooting_(Android)">root</a> it.
-        I haven't been able to root my phone, so the method below is an untested Claude-assisted proposal.
-        Let me know how it goes.</p>
+        I haven't been able to root my phone, so I could only test the method below in a <a href="https://lineageos.org/">LineageOS</a> virtual machine.</p>
         <p>Run the following in an <a href="https://developer.android.com/tools/adb">ADB</a> shell:</p>
         <pre>su -c "service call SurfaceFlinger 1015 i32 1 \
-    f 21.26 f 21.26 f 21.26 f 0 \
-    f 71.52 f 71.52 f 71.52 f 0 \
-    f 7.22 f 7.22 f 7.22 f 0 \
-    f -50 f -50 f -50 f 1"</pre>
-        <p>The command assumes that <a href="https://android.googlesource.com/platform/frameworks/native/+/refs/heads/main/services/surfaceflinger/SurfaceFlinger.cpp#6453">invoking SurfaceFlinger's code 1015 loads a custom colour-mapping matrix</a>.</p>
+    f 212.6 f 212.6 f 212.6 f 0 \
+    f 715.2 f 715.2 f 715.2 f 0 \
+    f 72.2 f 72.2 f 72.2 f 0 \
+    f -500 f -500 f -500 f 1"</pre>
+        <p>The command relies on the obscure fact that <a href="https://android.googlesource.com/platform/frameworks/native/+/refs/heads/main/services/surfaceflinger/SurfaceFlinger.cpp#6453">invoking SurfaceFlinger's code 1015 loads a custom colour-mapping matrix</a>.</p>
         <footer><i>Updated 2026-10-12</i> - <a href="index.html">homepage</a></footer>
     </body>
 </html>
