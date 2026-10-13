@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Settings for a binary black-white display</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <h1>Settings for a binary black-white display</h1>
+        <p>Setting a smartphone display to greyscale tends to make it less appealing tends to reduce addicted device use.
+        Greyscale still offers a full continuous range of brightness between black and white.
+        We can do better.</p>
+        <p>A strictly black-and-white quantised display uses 2 colours in place of greyscale's usual 256, but yields much more than 1/128 of the visible information.</p>
+        <p>Linux desktops are deeply configurable and so make for an easy testing ground.
+        Most Linux desktops are based around either <a href="https://www.x.org/">Xorg</a> or <a href="https://wayland.freedesktop.org/">Wayland</a>.
+        Most niche visual effects are based around fragment shaders.
+        Under Xorg, you can add shaders with a compositor, such as <a href="https://picom.app/">picom</a>.
+        Under Wayland, your compositor must be one that supports shaders, of which the most popular is <a href="https://hypr.land/">Hyprland</a>.</p>
+        <h2>picom</h2>
+        <p>Under a working Xorg session, run</p>
+        <pre>picom --backend glx --window-shader-fg bw.glsl &amp;</pre>
+        <p>where <code>bw.glsl</code> is (the path to) a text file of the following:</p>
+        <pre>#version 330
+in vec2 texcoord;
+uniform sampler2D tex;
+vec4 default_post_processing(vec4 c);
+
+vec4 window_shader() {
+    vec4 c = texelFetch(tex, ivec2(texcoord), 0);
+    float l = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
+    return default_post_processing(vec4(vec3(step(0.5, l)), c.a));
+}</pre>
+        <p>If picom crashes with an error about GLX, perhaps your GPU or its drivers are too old.
+        If so, add <code>LIBGL_ALWAYS_SOFTWARE=1</code> to the start of the picom command.</p>
+        <p>If windows turn black and white, but don't respond to input, blindly type <code>pkill picom</code> (and press Enter) in your terminal.
+        Then figure out the rest where I could not.</p>
+        <h2>Hyprland</h2>
+        <p>This also relies on a shader file, <code>.config/hypr/bw.frag</code></p>
+        <pre>#version 300 es
+precision highp float;
+in vec2 v_texcoord;
+uniform sampler2D tex;
+out vec4 fragColor;
+
+void main() {
+    vec3 c = texture(tex, v_texcoord).rgb;
+    float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
+    fragColor = vec4(vec3(step(0.5, l)), 1.0);
+}</pre>
+        <p>To turn on the feature temporarily, run <code>hyprctl eval "hl.config({ decoration = { screen_shader = '$HOME/.config/hypr/bw.frag' } })"</code> and replace the path with <code>''</code> to turn it off.</p>
+        <h2>Android</h2>
+        <p>To configure Android deeply, you need to <a href="https://en.wikipedia.org/wiki/Rooting_(Android)">root</a> it.
+        I haven't been able to root my phone, so the method below is an untested Claude-assisted proposal.
+        Let me know how it goes.</p>
+        <p>Run the following in an <a href="https://developer.android.com/tools/adb">ADB</a> shell:</p>
+        <pre>su -c "service call SurfaceFlinger 1015 i32 1 \
+    f 21.26 f 21.26 f 21.26 f 0 \
+    f 71.52 f 71.52 f 71.52 f 0 \
+    f 7.22 f 7.22 f 7.22 f 0 \
+    f -50 f -50 f -50 f 1"</pre>
+        <p>The command assumes that <a href="https://android.googlesource.com/platform/frameworks/native/+/refs/heads/main/services/surfaceflinger/SurfaceFlinger.cpp#6453">invoking SurfaceFlinger's code 1015 loads a custom colour-mapping matrix</a>.</p>
+        <footer><i>Updated 2026-10-12</i> - <a href="index.html">homepage</a></footer>
+    </body>
+</html>
